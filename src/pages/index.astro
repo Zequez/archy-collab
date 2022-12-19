@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Info from "../components/Info.astro";
+import DemoCard from "../components/DemoCard.astro";
+---
+
+<Layout title="Google Sheets Based Website Experiment">
+  <main class="p-8 mx-auto max-w-5xl">
+    <h1 class="text-4xl mb-8 font-bold text-gray-800">
+      Google Sheets Based Website Experiment
+    </h1>
+    <Info />
+    <ul role="list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <DemoCard title="Cards and Modals" url="/cards-and-modals" />
+      <DemoCard title="Side by Side" url="/side-by-side" />
+    </ul>
+  </main>
+</Layout>
+
+<style></style>

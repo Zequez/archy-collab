@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import getData, { Person } from "../spreadsheets/example";
+import { Text, Image } from "../components/items-widgets";
+import { Item } from "../lib/Item";
+
+const people = await getData();
+
+const items = [
+  new Item<Person>("telegramAvatarUrl", "Avatar", Image),
+  new Item<Person>("Full Name", "Name", Text),
+  new Item<Person>("Job Title", "Job Title", Text),
+  new Item<Person>("Website", "Website", Text),
+  new Item<Person>("telegramUsername", "Telegram", Text),
+  new Item<Person>("Gratitude Virtual Currency Accounting", "Offerings", Text),
+  new Item<Person>("Freeform Writing Space", "Message", Text),
+  new Item<Person>("Timestamp", "Last Updated", Text),
+];
+
+const personTitle = "Full Name";
+
+const itemTitleGridPosition = (i: number) =>
+  `grid-row-start: ${i + 1}; grid-row-end: ${
+    i + 2
+  }; grid-column-start: 1; grid-column-end: 2;`;
+
+const itemWidgetGridPosition = (itemNum: number, personNum: number) =>
+  `grid-column-start: ${personNum + 2}; grid-column-end: ${
+    personNum + 3
+  }; grid-row-start: ${itemNum + 1}; grid-row-end: ${itemNum + 2};`;
+---
+
+<Layout title="Side by side demo">
+  <div
+    class="grid"
+    style={` grid-template-columns: 200px repeat(${people.length}, 300px);`}
+  >
+    <div class="contents" title="Items">
+      {
+        items.map(({ title }, i) => (
+          <div
+            class="flex items-center justify-center bg-gray-200 border-b border-r border-dashed border-r-gray-400 border-b-gray-400"
+            style={itemTitleGridPosition(i)}
+          >
+            {title}
+          </div>
+        ))
+      }
+    </div>
+    {
+      people.map((p, j) => (
+        <div class="contents" title={p[personTitle]}>
+          {items.map(({ dataFrom, title, renderWith: Renderer }, i) => (
+            <div title={title} style={itemWidgetGridPosition(i, j)}>
+              <Renderer input={p[dataFrom]} />
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</Layout>

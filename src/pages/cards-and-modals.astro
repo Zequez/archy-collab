@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/cards-and-modals/Card";
+import getData from "../spreadsheets/example";
+
+const people = await getData();
+---
+
+<!-- <script define:vars={{ people }}>
+  console.log(people);
+</script> -->
+<Layout title="Google Sheets Based Website Experiment">
+  <main class="p-8 mx-auto max-w-5xl">
+    <h1 class="text-4xl mb-8 font-bold text-gray-800">People</h1>
+    <ul role="list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {
+        people.map((person) => (
+          <Card
+            client:load
+            name={person["Full Name"]}
+            job={person["Job Title"]}
+            website={person["Website"]}
+            email={person["Email Address"]}
+            telegram={person["Telegram Handle"]}
+            writing={person["Freeform Writing Space"]}
+            avatar={person["telegramAvatarUrl"]}
+            subscribed={person["Subscribe to my newsletter?"]}
+            timestamp={person["Timestamp"]}
+          />
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
+<style></style>
