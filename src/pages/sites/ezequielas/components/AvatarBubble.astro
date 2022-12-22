@@ -1,0 +1,14 @@
+---
+const {x, y, size, src} = Astro.props;
+
+const baseSize = 160;
+const intSize = parseInt(size);
+const sizePx = baseSize * intSize / 100;
+const borderClass = intSize < 50 ? "border-2" : "border-2";
+
+
+---
+
+<div class="absolute inset-0 flex items-center justify-center">
+	<img src={src} class={`rounded-full ${borderClass} border-solid border-white border-opacity-75 w-40 h-40 shadow-md relative`} style={`left: ${x}px; top: ${y}px;  height: ${sizePx}px; width: ${sizePx}px;`} alt="Picture of me"/>
+<div>

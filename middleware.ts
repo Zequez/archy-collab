@@ -5,13 +5,10 @@ export const config = {
   matcher: [
     /*
      * Match all paths except for:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. /fonts (inside /public)
-     * 4. /examples (inside /public)
-     * 5. all root files inside /public (e.g. /favicon.ico)
+     * 1. thes ones mentioned and...
+     * 2. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!api|@vite|@fs|src|node_modules|[\\w-]+\\.\\w+).*)",
+    "/((?!api|Users|@vite|@fs|src|node_modules|[\\w-]+\\.\\w+).*)",
   ],
 };
 
