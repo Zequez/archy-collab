@@ -1,0 +1,10 @@
+---
+	const {credit, color} = Astro.props;
+---
+
+<a href="https://www.patreon.com/zequez" class="bg-[#b461b2] hover:saturate-150 border border-white/75 border-solid text-xl rounded-md w-20 flex mx-2 mb-4">
+	<div class="flex w-16 py-1 justify-center flex-grow">
+		<span class="opacity-75 mr-1">$</span> {credit}
+	</div>
+	<div class="bg-black/50 w-2 rounded-r-md"></div>
+</a>

@@ -13,7 +13,10 @@ const images = imagesImports.map((imp) => imp.default).reduce((all, item) => {
 }, {})
 import avatar from './images/avatar-shaved.jpg'
 import AvatarBubble from './components/AvatarBubble.astro';
-
+import CivCredit from './components/CivCredit.astro';
+import SectionTitle from './components/SectionTitle.astro';
+import CreativeWorkCard from './components/CreativeWorkCard.astro';
+import SuperButton from './components/SuperButton.astro';
 
 // const siteConfig = {
 // 	favicon
@@ -23,9 +26,9 @@ import AvatarBubble from './components/AvatarBubble.astro';
 
 <Layout title="Ezequiel A. Schwartzman">
 	<main class="bg-gradient-to-r from-[#90b461] to-[#53c8aa] min-h-full tracking-wider text-white">
-		<div class="mx-auto flex flex-col justify-center max-w-lg py-8">
-			<header class="mb-4 flex flex-col items-center justify-center">
-				<div class="mb-4 relative h-40 w-full">
+		<div class="mx-auto flex flex-col justify-center max-w-screen-md py-8">
+			<header class="mb-8 flex flex-col items-center justify-center">
+				<div class="mb-4 relative h-40 w-full overflow-hidden">
 					<AvatarBubble src={images['avatar-wizard.jpg']} size="27%" x={-270} y={-20}/>
 					<AvatarBubble src={images['avatar-hippie.jpg']} size="30%" x={-230} y={30}/>
 					<AvatarBubble src={images['avatar-laugh.jpg']} size="40%" x={-160} y={-30}/>
@@ -36,33 +39,77 @@ import AvatarBubble from './components/AvatarBubble.astro';
 					<AvatarBubble src={images['avatar-tongue.jpg']} size="15%" x={180} y={-40}/>
 					<AvatarBubble src={images['avatar-parenting.jpg']} size="45%" x={240} y={10}/>
 				</div>
-				<h1 class="text-2xl">Ezequiel A. Schwartzman</h1>
-				<div role="doc-subtitle" class="opacity-75 text-sm">Web Weaver • Experimenter • Possibility Manager Apprentice</div>
+				<h1 class="text-2xl px-4">Ezequiel A. Schwartzman</h1>
+				<div role="doc-subtitle" class="opacity-75 text-sm px-4">Web Weaver • Experimenter • Possibility Manager Apprentice • Parent</div>
 			</header>
-			<div class="mb-4">
-				<h2 class="text-xl font-kalam">What I have to offer</h2>
-				<ul class="list-disc pl-8 opacity-75">
+			<div class="mb-8 px-4">
+				<SectionTitle>What I have to offer</SectionTitle>
+				<ul class="list-disc list-inside opacity-75">
 					<li>Websites creation & hosting.</li>
-					<li>Web components that can be used on any website.</li>
-					<li>Connect & transform information on the web from anywhere to anywhere. Automate stuff.</li>
-					<li>Collaborative web apps.</li>
+					<li>Web components that can be used anywhere.</li>
+					<li>Connect & transform information on the web from anywhere to anywhere.</li>
+				    <li>Automate digital stuff.</li>
+					<li>Web apps that can be installed as phone apps.</li>
 					<li>Showing you how to do any of the mentioned things.</li>
 					<li>Consulting on any web thing.</li>
 				</ul>
 			</div>
-			<div class="mb-4">
-				<h2 class="text-xl font-kalam">What I'm open to receving</h2>
-				<ul class="list-disc pl-8 opacity-75">
+			<div class="mb-8 px-4">
+				<SectionTitle>What I'm open to receving</SectionTitle>
+				<ul class="list-disc list-inside  opacity-75">
 					<li>Cash flowing through me to people that provide value to me.</li>
 					<li>Non-material value such as possibilities, clarity, EHP, coaching, extraordinary spaces, etc.</li>
 				</ul>
 			</div>
-			<div class="mb-4">
-				<h2 class="text-xl font-kalam">Work philosophy</h2>
+			<div class="mb-8 px-4">
+				<SectionTitle>Work philosophy</SectionTitle>
 				<p class="opacity-75 mb-2">I receive messages with proposals/requests from team members. I schedule calls with team member/s to get to know each other and flesh out what's being called into creation. I keep in touch and fulfill requests as I see fit. You are invited to give back whatever you want in the spirit of the gift. Work is prioritized based on my enthusiasm, energy levels and time availability.</p>
 				<div class="flex justify-center">
-					<a class="px-4 py-2 rounded-md text-white uppercase font-normal shadow-md tracking-widest bg-gradient-to-r from-[#b461b2] to-[#8561B4] border-solid border-2 border-[#8561B4] hover:scale-110 transition-all hover:saturate-150 duration-500" href="https://t.me/zequez" target="_blank">Make Proposal</a>
+					<SuperButton href="https://t.me/zequez">Make Proposal</SuperButton>
 				</div>
+			</div>
+			<div class="mb-8 px-4">
+				<SectionTitle>Crazy thing that I'm comitted to make exist</SectionTitle>
+				<div class="bg-gradient-to-r from-black/10 to-black/20 border border-white/75 border-solid rounded-md p-4 italic saturate-0">
+					<p>Collaborative web-building, team-weaving platform to co-create gameworld-boards/social-networks/web-apps/websites tailored to our teams needs. I'm currently seeking more clarity about it and experimenting with it's component parts.</p>
+					<div class="text-right"><a href="https://t.me/zequez" target="_blank" class="text-white underline">Learn more...</a></div>
+				</div>
+			</div>
+			<div class="mb-8 px-4">
+				<SectionTitle>Support me monthly with cash on Patreon</SectionTitle>
+				<div class="flex flex-wrap items-center justify-center">
+					<CivCredit credit={7}/>
+					<CivCredit credit={13}/>
+					<CivCredit credit={20}/>
+					<CivCredit credit={54}/>
+					<CivCredit credit={108}/>
+					<CivCredit credit={500}/>
+				</div>
+			</div>
+			<div class="mb-8 px-4">
+				<SectionTitle>Creative showcase</SectionTitle>
+				<div class="flex flex-wrap items-center justify-center">
+					<p class="opacity-75 text-center">Here there is going to be a list of all the things I ever made with pictures; at some point in the future; in the meantime... <a href="https://github.com/Zequez" class="underline bg-[#b461b2] px-1 py-0.5 rounded-sm hover:saturate-150" target="_blank">browse stuff on Github.</a></p>
+					
+					<!-- <CreativeWorkCard>Mandelbrot Sandbox</CreativeWorkCard>
+					<CreativeWorkCard>Work on Ubiquity</CreativeWorkCard>
+					<CreativeWorkCard>zequez.space</CreativeWorkCard>
+					<CreativeWorkCard>GGFilter</CreativeWorkCard>
+					<CreativeWorkCard>Reddit Placebot</CreativeWorkCard>
+					<CreativeWorkCard>Factorio Mods Portal</CreativeWorkCard>
+					<CreativeWorkCard>Playtime For The Buck</CreativeWorkCard>
+					<CreativeWorkCard>Mapa de Transporte</CreativeWorkCard>
+					<CreativeWorkCard>Target Shooter</CreativeWorkCard>
+					<CreativeWorkCard>All abandoned projects</CreativeWorkCard> -->
+				</div>
+			</div>
+			<div class="mb-8 px-4">
+				<SectionTitle>Newsletter</SectionTitle>
+				<p class="opacity-75 text-center mb-8">Receive all my research discoveries, creative work updates and invitations</p>
+				<div class="text-center">
+					<SuperButton href="https://docs.google.com/forms/d/e/1FAIpQLSeGyf8DYuMRH3B8QRx_9AKi5-4kxXor5VcND7TlYFe9r6u0gA/viewform?usp=sf_link">Sign Up</SuperButton>
+				</div>
+
 			</div>
 		<div>
 	</main>
