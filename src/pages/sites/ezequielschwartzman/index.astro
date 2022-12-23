@@ -17,13 +17,9 @@ import SectionTitle from './components/SectionTitle.astro';
 import CreativeWorkCard from './components/CreativeWorkCard.astro';
 import SuperButton from './components/SuperButton.astro';
 
-const siteConfig = {
-	favicon,
-	title: "Ezequiel Adrian Schwartzman"
-}
 ---
 
-<Layout config={siteConfig}>
+<Layout title="Ezequiel A. Schwartzman">
 	<main class="relative bg-gradient-to-r from-[#90b461] to-[#53c8aa] min-h-full tracking-wider text-white">
 		<div class="h-full w-full absolute opacity-5" style={`background-image: url(${pattern})`}></div>
 		<div class="relative mx-auto flex flex-col justify-center max-w-screen-md py-8">
@@ -39,7 +35,7 @@ const siteConfig = {
 					<AvatarBubble src={images['avatar-tongue.jpg']} size={15} x={180} y={-40}/>
 					<AvatarBubble src={images['avatar-parenting.jpg']} size={45} x={240} y={10}/>
 				</div>
-				<h1 class="text-2xl px-4">Ezequiel A. Schwartzman</h1>
+				<h1 class="text-2xl px-4">Ezequiel <span title="Adrian">A.</span> Schwartzman</h1>
 				<div role="doc-subtitle" class="opacity-75 text-sm px-4">Web Weaver • Experimenter • Possibility Manager Apprentice • Parent</div>
 			</header>
 			<div class="mb-8 px-4">
