@@ -6,7 +6,7 @@ const rootDir = process.cwd();
 const production = import.meta.env.PROD;
 const baseOutputDir = path.join(rootDir, production ? "dist" : "public");
 const avatarsCachePath = path.join(baseOutputDir, ".cache/telegram-avatars");
-fs.mkdirSync(avatarsCachePath, { recursive: true });
+// fs.mkdirSync(avatarsCachePath, { recursive: true });
 
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
