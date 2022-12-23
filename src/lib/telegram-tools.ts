@@ -123,7 +123,7 @@ export function telegramTransformer<K>(
       const username = cleanUsername(person[telegramColumn] as string);
       return {
         telegramUsername: username,
-        telegramAvatarUrl: await downloadTelegramAvatar(username),
+        telegramAvatarUrl: "", //await downloadTelegramAvatar(username),
       };
     } else {
       return { telegramUsername: null, telegramAvatarUrl: null };

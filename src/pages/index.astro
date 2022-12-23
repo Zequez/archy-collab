@@ -1,20 +1,51 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Info from "../components/Info.astro";
-import DemoCard from "../components/DemoCard.astro";
+import { pUrl } from "../lib/utils";
 ---
 
-<Layout title="Google Sheets Based Website Experiment">
-  <main class="p-8 mx-auto max-w-5xl">
+<Layout title="Experimental Collaborative Web Building Platform">
+  <style>
+    a {
+      color: green;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <main class="p-8 mx-auto max-w-3xl">
     <h1 class="text-4xl mb-8 font-bold text-gray-800">
-      Google Sheets Based Website Experiment
+      Experimental Collaborative Web Building Platform
     </h1>
-    <Info />
-    <ul role="list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <DemoCard title="Cards and Modals" url="/cards-and-modals" />
-      <DemoCard title="Side by Side" url="/side-by-side" />
+    <p class="mb-4">
+      There is no much information about what this is about. It's a prototype,
+      an idea, a wish, a dream. It's place where we come together to build the
+      web on Archiarchy. Where we have high level fun. Where we connect and
+      weave teams.
+    </p>
+    <p class="mb-4">
+      <a href="https://ezequielschwartzman.archy.site">Ezequiel Schwartzman</a> is
+      comitted to make this happen <a href="https://t.me/zequez"
+        >you can ask him directly on Telegram</a
+      > if you want to learn more or participate.
+    </p>
+    <p class="mb-4">
+      <a href="https://github.com/zequez/archy-collab"
+        >All the source code is at Github</a
+      >.
+    </p>
+    <p class="mb-4">Current playgrounds/experiments/pages on the platform:</p>
+    <ul class="pl-8">
+      <li>Platform Home Page (this page) - <a href={pUrl()}>archy.site</a></li>
+      <li>
+        Ezequiel Schwartzman - <a href={pUrl("ezequielschwartzman")}
+          >ezequielschwartzman.archy.site</a
+        >
+      </li>
+      <li>
+        Google Sheets Based Website - <a href={pUrl("gsheets-based-website")}
+          >gsheets-based-website.archy.site</a
+        >
+      </li>
     </ul>
   </main>
 </Layout>
-
-<style></style>

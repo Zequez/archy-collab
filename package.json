@@ -27,6 +27,7 @@
     "vercel": "^28.9.0"
   },
   "devDependencies": {
+    "@types/request": "^2.48.8",
     "@vite-pwa/astro": "^0.0.1",
     "axios": "^1.2.0",
     "classnames": "^2.3.2",

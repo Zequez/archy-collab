@@ -1,16 +1,17 @@
-type Transformer = (person: any) => Promise<any> | any;
+import { pUrl } from "@/lib/utils";
 
-const apiHost = import.meta.env.DEV
-  ? "http://localhost:5000/"
-  : "http://gsheets-api-service.zequez.space/";
+type Transformer = (person: any) => Promise<any> | any;
 
 async function fetchSheetTable(
   sheetId: string,
   range: string,
   transformers: Transformer[] = []
 ) {
-  const url = `${apiHost}api?id=${sheetId}&range=${range}`;
-
+  const url = `${pUrl(
+    "gsheets-based-website",
+    true
+  )}/api.json?id=${sheetId}&range=${range}`;
+  console.log(url);
   const response = await fetch(url);
   const data = await response.json();
   const headers: string[] = data.values[0];

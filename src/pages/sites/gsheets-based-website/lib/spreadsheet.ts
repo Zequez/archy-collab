@@ -1,8 +1,8 @@
-import fetchSheetTable from "../lib/fetch-sheet-table";
+import fetchSheetTable from "./fetch-sheet-table";
 import {
   telegramTransformer,
   TelegramTransformerAdditions,
-} from "../lib/telegram-tools";
+} from "@/lib/telegram-tools";
 
 const SHEET_ID = "1UEa0Zpwu6YV4STZMQK4hjjOnBj0prpeh6zalVciWSq4";
 const SHEET_RANGE = `Responses`;

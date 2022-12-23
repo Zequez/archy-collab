@@ -1,13 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import getData, { Person } from "../spreadsheets/example";
-import { Text, Image } from "../components/items-widgets";
-import { Item } from "../lib/Item";
+import Layout from "./components/Layout.astro";
+import getData, { Person } from "./lib/spreadsheet";
+import { Text, Image } from "./components";
+import { Item } from "./lib/Item";
 
 const people = await getData();
 
 const items = [
-  new Item<Person>("telegramAvatarUrl", "Avatar", Image),
+  // new Item<Person>("telegramAvatarUrl", "Avatar", Image),
   new Item<Person>("Full Name", "Name", Text),
   new Item<Person>("Job Title", "Job Title", Text),
   new Item<Person>("Website", "Website", Text),
@@ -30,7 +30,7 @@ const itemWidgetGridPosition = (itemNum: number, personNum: number) =>
   }; grid-row-start: ${itemNum + 1}; grid-row-end: ${itemNum + 2};`;
 ---
 
-<Layout title="Side by side demo">
+<Layout title="Google Sheets Based Website Demo">
   <div
     class="grid"
     style={` grid-template-columns: 200px repeat(${people.length}, 300px);`}
