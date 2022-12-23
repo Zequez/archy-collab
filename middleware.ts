@@ -8,7 +8,7 @@ export const config = {
      * 1. thes ones mentioned and...
      * 2. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!api|Users|@vite|@fs|src|node_modules|[\\w-]+\\.\\w+).*)",
+    "/((?!api|Users|@id|@vite|@fs|src|node_modules|[\\w-]+\\.\\w+).*)",
   ],
 };
 

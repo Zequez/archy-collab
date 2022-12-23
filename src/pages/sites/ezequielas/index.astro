@@ -1,43 +1,43 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import '@fontsource/kalam';
-// import favicon from './favicon.svg';
+import Layout from "./components/Layout.astro";
+import favicon from './favicon.ico';
+import pattern from './pattern.webp';
 const imagesImports = await Astro.glob('./images/*.jpg');
 const images = imagesImports.map((imp) => imp.default).reduce((all, item) => {
 	const m = item.match(/[^\/]+$/);
-	console.log(m);
 	if (m) {
 		all[m[0]] = item;
 	}
 	return all;
 }, {})
 import avatar from './images/avatar-shaved.jpg'
-import AvatarBubble from './components/AvatarBubble.astro';
+import AvatarBubble from './components/AvatarBubble.jsx';
 import CivCredit from './components/CivCredit.astro';
 import SectionTitle from './components/SectionTitle.astro';
 import CreativeWorkCard from './components/CreativeWorkCard.astro';
 import SuperButton from './components/SuperButton.astro';
 
-// const siteConfig = {
-// 	favicon
-// 	title: "Ezequiel Adrian Schwartzman"
-// }
+const siteConfig = {
+	favicon,
+	title: "Ezequiel Adrian Schwartzman"
+}
 ---
 
-<Layout title="Ezequiel A. Schwartzman">
-	<main class="bg-gradient-to-r from-[#90b461] to-[#53c8aa] min-h-full tracking-wider text-white">
-		<div class="mx-auto flex flex-col justify-center max-w-screen-md py-8">
+<Layout config={siteConfig}>
+	<main class="relative bg-gradient-to-r from-[#90b461] to-[#53c8aa] min-h-full tracking-wider text-white">
+		<div class="h-full w-full absolute opacity-5" style={`background-image: url(${pattern})`}></div>
+		<div class="relative mx-auto flex flex-col justify-center max-w-screen-md py-8">
 			<header class="mb-8 flex flex-col items-center justify-center">
 				<div class="mb-4 relative h-40 w-full overflow-hidden">
-					<AvatarBubble src={images['avatar-wizard.jpg']} size="27%" x={-270} y={-20}/>
-					<AvatarBubble src={images['avatar-hippie.jpg']} size="30%" x={-230} y={30}/>
-					<AvatarBubble src={images['avatar-laugh.jpg']} size="40%" x={-160} y={-30}/>
-					<AvatarBubble src={images['avatar-knot.jpg']} size="25%" x={-130} y={30}/>
-					<AvatarBubble src={images['avatar-shaved.jpg']} size="100%" x={0} y={0}/>
-					<AvatarBubble src={images['avatar-beach.jpg']} size="30%" x={120} y={-50}/>
-					<AvatarBubble src={images['avatar-long-hair.jpg']} size="40%" x={140} y={20}/>
-					<AvatarBubble src={images['avatar-tongue.jpg']} size="15%" x={180} y={-40}/>
-					<AvatarBubble src={images['avatar-parenting.jpg']} size="45%" x={240} y={10}/>
+					<AvatarBubble src={images['avatar-wizard.jpg']} size={27} x={-270} y={-20}/>
+					<AvatarBubble src={images['avatar-hippie.jpg']} size={30} x={-230} y={30}/>
+					<AvatarBubble src={images['avatar-laugh.jpg']} size={40} x={-160} y={-30}/>
+					<AvatarBubble src={images['avatar-knot.jpg']} size={25} x={-130} y={30}/>
+					<AvatarBubble src={images['avatar-shaved.jpg']} size={100} x={0} y={0}/>
+					<AvatarBubble src={images['avatar-beach.jpg']} size={30} x={120} y={-50}/>
+					<AvatarBubble src={images['avatar-long-hair.jpg']} size={40} x={140} y={20}/>
+					<AvatarBubble src={images['avatar-tongue.jpg']} size={15} x={180} y={-40}/>
+					<AvatarBubble src={images['avatar-parenting.jpg']} size={45} x={240} y={10}/>
 				</div>
 				<h1 class="text-2xl px-4">Ezequiel A. Schwartzman</h1>
 				<div role="doc-subtitle" class="opacity-75 text-sm px-4">Web Weaver • Experimenter • Possibility Manager Apprentice • Parent</div>
@@ -106,7 +106,7 @@ import SuperButton from './components/SuperButton.astro';
 			<div class="mb-8 px-4">
 				<SectionTitle>Newsletter</SectionTitle>
 				<p class="opacity-75 text-center mb-8">Receive all my research discoveries, creative work updates and invitations</p>
-				<div class="text-center">
+				<div class="flex justify-center">
 					<SuperButton href="https://docs.google.com/forms/d/e/1FAIpQLSeGyf8DYuMRH3B8QRx_9AKi5-4kxXor5VcND7TlYFe9r6u0gA/viewform?usp=sf_link">Sign Up</SuperButton>
 				</div>
 
