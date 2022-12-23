@@ -16,6 +16,8 @@ import CivCredit from "./components/CivCredit.astro";
 import SectionTitle from "./components/SectionTitle.astro";
 import SuperButton from "./components/SuperButton.astro";
 import Link from "./components/Link.astro";
+import CommitmentsItem from "./components/CommitmentsItem.astro";
+import WebPresence from "./components/WebPresence.astro";
 
 const avtr = (name: string) =>
   `/public/ezequielschwartzman/avatars/${name}.jpg`;
@@ -106,8 +108,9 @@ const avtr = (name: string) =>
             <a
               href="https://t.me/zequez"
               target="_blank"
-              class="text-white underline">Learn more...</a
-            >
+              class="text-white underline"
+              >Learn more...
+            </a>
           </div>
         </div>
       </div>
@@ -128,25 +131,46 @@ const avtr = (name: string) =>
         <SectionTitle>Development and support commitments</SectionTitle>
         <div class="opacity-75 text-center">
           <p class="mb-4">If I take a request, I'll add it here.</p>
-          <ul class="pl-8 flex flex-wrap justify-center">
-            <li class="mx-2 mb-4">
-              <Link href="https://ezequielschwartzman.archy.site"
-                >My own website (this one)</Link
-              >
-            </li>
-            <li class="mx-2 mb-4">
-              <Link href="https://archy.site">
-                The collaborative website building platform
-              </Link>
-            </li>
+          <ul
+            class="text-left max-w-md mb-4 mx-auto border border-solid border-white/75 rounded-md bg-gradient-to-r from-black/10 to-black/20"
+          >
+            <CommitmentsItem href="https://ezequielschwartzman.archy.site">
+              My own website (this one)
+            </CommitmentsItem>
+            <CommitmentsItem href="https://archy.site">
+              Collaborative web building platform
+            </CommitmentsItem>
           </ul>
-          <p class="">
-            You can also
-            <Link href="https://github.com/Zequez"
-              >browse my programming activity on Github</Link
-            > to see all the open source things I made over the years but I'm no
-            longer interested.
-          </p>
+        </div>
+      </div>
+      <div class="mb-8 px-4">
+        <SectionTitle>Web presence and activity</SectionTitle>
+        <div class="grid grid-flow-col gap-2">
+          <WebPresence
+            href="https://github.com/Zequez"
+            category="Coding"
+            platform="Github"
+          />
+          <WebPresence
+            href="https://medium.com/@ezequiel.schwartzman"
+            category="Articles"
+            platform="Medium"
+          />
+          <WebPresence
+            href="http://notes.zequez.space/"
+            category="Notes"
+            platform="Logseq"
+          />
+          <WebPresence
+            href="https://www.instagram.com/ezequiel.schwartzman/"
+            category="Social Media"
+            platform="Instagram"
+          />
+          <WebPresence
+            href="https://www.youtube.com/channel/UCXhH5g4vDaci5EcqYaYv1kw"
+            category="Videos"
+            platform="YouTube"
+          />
         </div>
       </div>
       <div class="mb-8 px-4">
@@ -162,7 +186,6 @@ const avtr = (name: string) =>
           >
         </div>
       </div>
-      <div></div>
     </div>
   </main>
 </Layout>

@@ -1,0 +1,12 @@
+---
+const { href, platform, category } = Astro.props;
+---
+
+<a
+  href={href}
+  class="block text-center cursor-pointer border border-white/30 border-solid rounded-md hover:bg-black/10"
+  target="_blank"
+>
+  <span class="block">{category}</span>
+  <span class="block opacity-50 text-sm -mt-1">{platform}</span>
+</a>
