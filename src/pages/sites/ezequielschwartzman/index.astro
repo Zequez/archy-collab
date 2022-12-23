@@ -1,21 +1,24 @@
 ---
 import Layout from "./components/Layout.astro";
 import pattern from "./pattern.webp";
-const avatarsImport = await Astro.glob("./images/avatars/*.jpg");
-const avtrs = avatarsImport
-  .map((imp) => imp.default)
-  .reduce((all, item) => {
-    const m = item.match(/[^\/]+$/);
-    if (m) {
-      all[m[0]] = item;
-    }
-    return all;
-  }, {});
+// const avatarsImport = await Astro.glob("./images/avatars/*.jpg");
+// const avtrs = avatarsImport
+//   .map((imp) => imp.default)
+//   .reduce((all, item) => {
+//     const m = item.match(/[^\/]+$/);
+//     if (m) {
+//       all[m[0]] = item;
+//     }
+//     return all;
+//   }, {});
 import AvatarBubble from "./components/AvatarBubble.jsx";
 import CivCredit from "./components/CivCredit.astro";
 import SectionTitle from "./components/SectionTitle.astro";
 import SuperButton from "./components/SuperButton.astro";
 import Link from "./components/Link.astro";
+
+const avtr = (name: string) =>
+  `/public/ezequielschwartzman/avatars/${name}.jpg`;
 ---
 
 <Layout title="Ezequiel A. Schwartzman">
@@ -32,15 +35,15 @@ import Link from "./components/Link.astro";
     >
       <header class="mb-8 flex flex-col items-center justify-center">
         <div class="mb-4 relative h-40 w-full overflow-hidden">
-          <AvatarBubble src={avtrs["wizard.jpg"]} size={27} x={-270} y={-20} />
-          <AvatarBubble src={avtrs["hippie.jpg"]} size={30} x={-230} y={30} />
-          <AvatarBubble src={avtrs["laugh.jpg"]} size={40} x={-160} y={-30} />
-          <AvatarBubble src={avtrs["knot.jpg"]} size={25} x={-130} y={30} />
-          <AvatarBubble src={avtrs["shaved.jpg"]} size={100} x={0} y={0} />
-          <AvatarBubble src={avtrs["beach.jpg"]} size={30} x={120} y={-50} />
-          <AvatarBubble src={avtrs["werewolf.jpg"]} size={40} x={140} y={20} />
-          <AvatarBubble src={avtrs["tongue.jpg"]} size={15} x={180} y={-40} />
-          <AvatarBubble src={avtrs["parent.jpg"]} size={45} x={240} y={10} />
+          <AvatarBubble src={avtr("wizard")} size={27} x={-270} y={-20} />
+          <AvatarBubble src={avtr("hippie")} size={30} x={-230} y={30} />
+          <AvatarBubble src={avtr("laugh")} size={40} x={-160} y={-30} />
+          <AvatarBubble src={avtr("knot")} size={25} x={-130} y={30} />
+          <AvatarBubble src={avtr("shaved")} size={100} x={0} y={0} />
+          <AvatarBubble src={avtr("beach")} size={30} x={120} y={-50} />
+          <AvatarBubble src={avtr("werewolf")} size={40} x={140} y={20} />
+          <AvatarBubble src={avtr("tongue")} size={15} x={180} y={-40} />
+          <AvatarBubble src={avtr("parent")} size={45} x={240} y={10} />
         </div>
         <h1 class="text-2xl px-4">
           Ezequiel <span title="Adrian">A.</span> Schwartzman
