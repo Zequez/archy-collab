@@ -1,7 +1,11 @@
 ---
-	const {href} = Astro.props
+const { href } = Astro.props;
 ---
 
-<a class="block px-4 py-2 rounded-md text-white uppercase font-normal shadow-md tracking-widest bg-gradient-to-r from-[#b461b2] to-[#8561B4] border-solid border border-white/75 hover:scale-110 transition-all hover:saturate-150 duration-500" href={href} target="_blank">
-	<slot/>
+<a
+  class="block px-4 py-2 rounded-md text-white uppercase font-normal shadow-md tracking-widest bg-gradient-to-r from-espurple1 to-espurple2 border-solid border border-white/75 hover:scale-110 transition-all hover:saturate-150 duration-500"
+  href={href}
+  target="_blank"
+>
+  <slot />
 </a>
