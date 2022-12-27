@@ -2,6 +2,22 @@
 import AvatarBubble from "./AvatarBubble.jsx";
 const avtr = (name: string) =>
   `/public/ezequielschwartzman/avatars/${name}.jpg`;
+
+const labels = [
+  "Web Weaver",
+  "Experimenter",
+  "Possibility Manager Apprentice",
+  "Parent",
+  "Team Gaia",
+];
+
+const labelsHtml = labels
+  .map((l, i) => {
+    const delay = i / (labels.length - 1) / 2;
+
+    return `<span style="animation: wait ${delay}s, fadeIn 1s ${delay}s;">${l}</span>`;
+  })
+  .join('<span style="animation: wait 1s, fadeIn 1s 1s;"> • </span>');
 ---
 
 <header class="mb-8 flex flex-col items-center justify-center">
@@ -19,8 +35,5 @@ const avtr = (name: string) =>
   <h1 class="text-2xl px-4 text-center">
     Ezequiel <span title="Adrian">A.</span> Schwartzman
   </h1>
-  <p class="opacity-75 text-sm px-4 text-center">
-    Web Weaver • Experimenter • Possibility Manager Apprentice • Parent • Team
-    Gaia
-  </p>
+  <p class="opacity-75 text-sm px-4 text-center" set:html={labelsHtml} />
 </header>
