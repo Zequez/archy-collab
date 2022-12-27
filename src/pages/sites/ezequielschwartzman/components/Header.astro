@@ -1,0 +1,26 @@
+---
+import AvatarBubble from "./AvatarBubble.jsx";
+const avtr = (name: string) =>
+  `/public/ezequielschwartzman/avatars/${name}.jpg`;
+---
+
+<header class="mb-8 flex flex-col items-center justify-center">
+  <div class="mb-4 relative h-40 w-full overflow-hidden">
+    <AvatarBubble src={avtr("wizard")} size={27} x={-270} y={-20} />
+    <AvatarBubble src={avtr("hippie")} size={30} x={-230} y={30} />
+    <AvatarBubble src={avtr("laugh")} size={40} x={-160} y={-30} />
+    <AvatarBubble src={avtr("knot")} size={25} x={-130} y={30} />
+    <AvatarBubble src={avtr("shaved")} size={100} x={0} y={0} />
+    <AvatarBubble src={avtr("beach")} size={30} x={120} y={-50} />
+    <AvatarBubble src={avtr("werewolf")} size={40} x={140} y={20} />
+    <AvatarBubble src={avtr("tongue")} size={15} x={180} y={-40} />
+    <AvatarBubble src={avtr("parent")} size={45} x={240} y={10} />
+  </div>
+  <h1 class="text-2xl px-4 text-center">
+    Ezequiel <span title="Adrian">A.</span> Schwartzman
+  </h1>
+  <p class="opacity-75 text-sm px-4 text-center">
+    Web Weaver • Experimenter • Possibility Manager Apprentice • Parent • Team
+    Gaia
+  </p>
+</header>

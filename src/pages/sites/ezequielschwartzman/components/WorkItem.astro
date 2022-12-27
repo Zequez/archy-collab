@@ -1,0 +1,14 @@
+---
+const { image } = Astro.props;
+---
+
+<div class="flex">
+  <div
+    class="w-16 h-16 shrink-0 object-contain bg-white rounded-lg flex items-center justify-center p-2"
+  >
+    <img src={`/public/ezequielschwartzman/work-icons/${image}.png`} class="" />
+  </div>
+  <div class="flex items-center leading-tight text-sm pl-2">
+    <slot />
+  </div>
+</div>

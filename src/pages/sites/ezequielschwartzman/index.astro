@@ -1,213 +1,27 @@
 ---
 import Layout from "./components/Layout.astro";
-import pattern from "./pattern.webp";
-// const avatarsImport = await Astro.glob("./images/avatars/*.jpg");
-// const avtrs = avatarsImport
-//   .map((imp) => imp.default)
-//   .reduce((all, item) => {
-//     const m = item.match(/[^\/]+$/);
-//     if (m) {
-//       all[m[0]] = item;
-//     }
-//     return all;
-//   }, {});
-import AvatarBubble from "./components/AvatarBubble.jsx";
-import CivCredit from "./components/CivCredit.astro";
-import SectionTitle from "./components/SectionTitle.astro";
-import SuperButton from "./components/SuperButton.astro";
-import Link from "./components/Link.astro";
-import CommitmentsItem from "./components/CommitmentsItem.astro";
-import WebPresence from "./components/WebPresence.astro";
 
-const avtr = (name: string) =>
-  `/public/ezequielschwartzman/avatars/${name}.jpg`;
+import Header from "./components/Header.astro";
+import Offering from "./sections/offering.astro";
+import Receiving from "./sections/receiving.astro";
+import WorkPhilosophy from "./sections/work-philosophy.astro";
+import CrazyThing from "./sections/crazy-thing.astro";
+import Patreon from "./sections/patreon.astro";
+import Commitments from "./sections/commitments.astro";
+import WebPresence from "./sections/web-presence.astro";
+import Newsletter from "./sections/newsletter.astro";
+import NextSteps from "./sections/next-steps.astro";
 ---
 
 <Layout title="Ezequiel A. Schwartzman">
-  <main
-    class="relative bg-gradient-to-r from-esgreen1 to-esgreen2 min-h-full tracking-wider text-white"
-  >
-    <div class="patterned h-full w-full absolute opacity-5"></div>
-    <div
-      class="relative mx-auto flex flex-col justify-center max-w-screen-md py-8"
-    >
-      <header class="mb-8 flex flex-col items-center justify-center">
-        <div class="mb-4 relative h-40 w-full overflow-hidden">
-          <AvatarBubble src={avtr("wizard")} size={27} x={-270} y={-20} />
-          <AvatarBubble src={avtr("hippie")} size={30} x={-230} y={30} />
-          <AvatarBubble src={avtr("laugh")} size={40} x={-160} y={-30} />
-          <AvatarBubble src={avtr("knot")} size={25} x={-130} y={30} />
-          <AvatarBubble src={avtr("shaved")} size={100} x={0} y={0} />
-          <AvatarBubble src={avtr("beach")} size={30} x={120} y={-50} />
-          <AvatarBubble src={avtr("werewolf")} size={40} x={140} y={20} />
-          <AvatarBubble src={avtr("tongue")} size={15} x={180} y={-40} />
-          <AvatarBubble src={avtr("parent")} size={45} x={240} y={10} />
-        </div>
-        <h1 class="text-2xl px-4 text-center">
-          Ezequiel <span title="Adrian">A.</span> Schwartzman
-        </h1>
-        <p class="opacity-75 text-sm px-4 text-center">
-          Web Weaver • Experimenter • Possibility Manager Apprentice • Parent
-        </p>
-      </header>
-      <div class="mb-8 px-4">
-        <SectionTitle>What I have to offer</SectionTitle>
-        <ul class="list-star opacity-75">
-          <li>Websites creation & hosting.</li>
-          <li>Web components that can be used anywhere.</li>
-          <li>
-            Connect & transform information on the web from anywhere to
-            anywhere.
-          </li>
-          <li>Automate digital stuff.</li>
-          <li>Web apps that can be installed as phone apps.</li>
-          <li>Showing you how to do any of the mentioned things.</li>
-          <li>Consulting on any web thing.</li>
-        </ul>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>What I'm open to receving</SectionTitle>
-        <ul class="list-star opacity-75">
-          <li>Cash flowing through me to people that provide value to me.</li>
-          <li>
-            Non-material value such as possibilities, clarity, EHP, coaching,
-            extraordinary spaces, etc.
-          </li>
-        </ul>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>Work philosophy</SectionTitle>
-        <p class="opacity-75 mb-4">
-          I receive messages with proposals/requests from team members. I
-          schedule calls with team member/s to get to know each other and flesh
-          out what's being called into creation. I keep in touch and fulfill
-          requests as I see fit. You are invited to give back whatever you want
-          in the spirit of the gift. Work is prioritized based on my enthusiasm,
-          energy levels and time availability.
-        </p>
-        <div class="flex justify-center">
-          <SuperButton href="https://t.me/zequez">Make Proposal</SuperButton>
-        </div>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>Crazy thing that I'm committed to make exist</SectionTitle
-        >
-        <div
-          class="bg-gradient-to-r from-black/10 to-black/20 border border-white/75 border-solid rounded-md p-4 italic saturate-0"
-        >
-          <p>
-            Collaborative web-building, team-weaving playground to co-create
-            gameworld-boards/social-networks/web-apps/websites tailored to our
-            teams needs. I'm currently seeking more clarity about it and
-            experimenting with it's component parts.
-          </p>
-          <div class="text-right">
-            <a
-              href="https://t.me/zequez"
-              target="_blank"
-              class="text-white underline"
-              >Learn more...
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle
-          >Commit to my commitments with <i>civilization credits</i> on Patreon</SectionTitle
-        >
-        <div class="flex flex-wrap items-center justify-center">
-          <CivCredit credit={3} />
-          <CivCredit credit={7} />
-          <CivCredit credit={13} />
-          <CivCredit credit={20} />
-          <CivCredit credit={54} />
-          <CivCredit credit={108} />
-          <CivCredit credit={500} />
-        </div>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>Development and support commitments</SectionTitle>
-        <div class="opacity-75 text-center">
-          <p class="mb-4">If I take a request, I'll add it here.</p>
-          <ul
-            class="text-left max-w-md mb-4 mx-auto border border-solid border-white/75 rounded-md bg-gradient-to-r from-black/10 to-black/20"
-          >
-            <CommitmentsItem href="https://ezequielschwartzman.archy.site">
-              My own website (this one)
-            </CommitmentsItem>
-            <CommitmentsItem href="https://archy.site">
-              Collaborative web building playground
-            </CommitmentsItem>
-          </ul>
-        </div>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>Web presence and activity</SectionTitle>
-        <div class="grid grid-flow-col gap-2">
-          <WebPresence
-            href="https://github.com/Zequez"
-            category="Coding"
-            platform="Github"
-          />
-          <WebPresence
-            href="https://medium.com/@ezequiel.schwartzman"
-            category="Articles"
-            platform="Medium"
-          />
-          <WebPresence
-            href="http://notes.zequez.space/"
-            category="Notes"
-            platform="Logseq"
-          />
-          <WebPresence
-            href="https://www.instagram.com/ezequiel.schwartzman/"
-            category="Social Media"
-            platform="Instagram"
-          />
-          <WebPresence
-            href="https://www.youtube.com/channel/UCXhH5g4vDaci5EcqYaYv1kw"
-            category="Videos"
-            platform="YouTube"
-          />
-        </div>
-      </div>
-      <div class="mb-8 px-4">
-        <SectionTitle>Newsletter</SectionTitle>
-        <p class="opacity-75 text-center mb-8">
-          Receive all my research discoveries, creative work updates and
-          invitations to events
-        </p>
-        <div class="flex flex-col justify-center items-center">
-          <input
-            placeholder="Name"
-            class="mb-4 text-black/60 rounded-md p-2 shadow-md block w-72 focus:outline outline-2 outline-espurple1"
-          />
-          <input
-            placeholder="Email"
-            class="mb-4 text-black/60 rounded-md p-2 shadow-md block w-72 focus:outline outline-2 outline-espurple1"
-          />
-          <SuperButton
-            href="https://docs.google.com/forms/d/e/1FAIpQLSeGyf8DYuMRH3B8QRx_9AKi5-4kxXor5VcND7TlYFe9r6u0gA/viewform?usp=sf_link"
-            >Sign Up</SuperButton
-          >
-        </div>
-      </div>
-    </div>
-  </main>
+  <Header />
+  <Offering />
+  <Receiving />
+  <WorkPhilosophy />
+  <CrazyThing />
+  <Patreon />
+  <Commitments />
+  <NextSteps />
+  <WebPresence />
+  <Newsletter />
 </Layout>
-
-<style>
-  .list-star li::before {
-    content: "★";
-    color: rgb(255, 240, 29);
-    font-size: 0.8em;
-    margin-right: 0.5rem;
-    position: relative;
-    top: -1px;
-    text-shadow: 0 1px 0px rgba(0, 0, 0, 0.3);
-  }
-
-  .patterned {
-    background-image: url(/public/ezequielschwartzman/pattern.webp);
-  }
-</style>

@@ -1,0 +1,11 @@
+---
+const { done } = Astro.props;
+---
+
+<div>
+  <span
+    class="inline-flex items-center justify-center rounded-sm border border-white border-solid w-4 h-4 bg-white/10 mr-1 relative"
+    >{done ? "×" : ""}</span
+  >
+  <slot />
+</div>

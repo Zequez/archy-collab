@@ -1,0 +1,35 @@
+---
+import SectionTitle from "../components/SectionTitle.astro";
+import WebPresenceItem from "../components/WebPresenceItem.astro";
+---
+
+<div class="mb-8 px-4">
+  <SectionTitle>Web presence and activity</SectionTitle>
+  <div class="grid grid-flow-col gap-2">
+    <WebPresenceItem
+      href="https://github.com/Zequez"
+      category="Coding"
+      platform="Github"
+    />
+    <WebPresenceItem
+      href="https://medium.com/@ezequiel.schwartzman"
+      category="Articles"
+      platform="Medium"
+    />
+    <WebPresenceItem
+      href="http://notes.zequez.space/"
+      category="Notes"
+      platform="Logseq"
+    />
+    <!-- <WebPresenceItem
+      href="https://www.instagram.com/ezequiel.schwartzman/"
+      category="Social Media"
+      platform="Instagram"
+    />
+    <WebPresenceItem
+      href="https://www.youtube.com/channel/UCXhH5g4vDaci5EcqYaYv1kw"
+      category="Videos"
+      platform="YouTube"
+    /> -->
+  </div>
+</div>

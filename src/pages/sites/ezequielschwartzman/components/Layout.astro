@@ -1,5 +1,6 @@
 ---
 import "@/base.css";
+import "../style.css";
 
 const pb = (file: string) => `/public/ezequielschwartzman/${file}`;
 
@@ -23,6 +24,15 @@ const { title } = Astro.props;
     <meta name="description" content={title} />
   </head>
   <body class="h-screen">
-    <slot />
+    <main
+      class="relative bg-gradient-to-r from-esgreen1 to-esgreen2 min-h-full tracking-wider text-white"
+    >
+      <div class="patterned h-full w-full absolute opacity-5"></div>
+      <div
+        class="relative mx-auto flex flex-col justify-center max-w-screen-md py-8"
+      >
+        <slot />
+      </div>
+    </main>
   </body>
 </html>
