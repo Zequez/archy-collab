@@ -1,0 +1,19 @@
+---
+import Layout from "./components/Layout.astro";
+import { parse } from "node-html-parser";
+const spaceportRawResponse = await fetch("https://spaceport.mystrikingly.com/");
+const spaceportRawHtml = await spaceportRawResponse.text();
+const doc = parse(spaceportRawHtml);
+const titleNode = doc.querySelector("title");
+const title = titleNode ? titleNode.innerText.replace("on Strikingly", "") : "";
+const images = doc
+  .querySelectorAll(".container .s-component-content img")
+  .map((img) => img.getAttribute("src"));
+console.log(images);
+---
+
+<Layout title={title}>
+  <div class="grid grid-cols-6 w-full">
+    {images.map((img) => <img src={img} width="200" height="200" />)}
+  </div>
+</Layout>

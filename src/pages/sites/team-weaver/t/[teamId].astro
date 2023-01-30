@@ -1,0 +1,10 @@
+---
+import Layout from "../components/Layout.astro";
+import TeamApp from "../components/TeamApp";
+
+const { teamId } = Astro.params;
+---
+
+<Layout title={`Team ${teamId}`}>
+  <TeamApp client:only teamId={teamId || ""} />
+</Layout>

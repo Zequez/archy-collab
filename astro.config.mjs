@@ -9,15 +9,21 @@ import react from "@astrojs/react";
 // https://astro.build/config
 import vercel from "@astrojs/vercel/serverless";
 
-import AstroPWA from '@vite-pwa/astro';
+import elm from "astro-integration-elm";
+
+import AstroPWA from "@vite-pwa/astro";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind({
-    config: {
-      applyBaseStyles: false
-    }
-  }), react()], // AstroPWA()
+  integrations: [
+    tailwind({
+      config: {
+        applyBaseStyles: false,
+      },
+    }),
+    react(),
+    elm(),
+  ], // AstroPWA()
   output: "server",
-  adapter: vercel()
+  adapter: vercel(),
 });

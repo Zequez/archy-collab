@@ -1,0 +1,21 @@
+---
+import "@/base.css";
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-100 font-sans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/jpeg" href="/public/spaceport/favicon.jpg" />
+
+    <title></title>
+    <meta name="description" content={title} />
+
+    <!-- <script src="/src/pwa.ts"></script> -->
+    {/* pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> */}
+  </head>
+  <body class=""><slot /></body>
+</html>
