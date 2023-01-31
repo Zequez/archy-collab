@@ -1,5 +1,49 @@
 ---
+import Layout from "@layouts/Layout.astro";
+import NavItem from "@components/NavItem.astro";
+
 const { name } = Astro.params;
 ---
 
-<h1>This space ({name}) is available</h1>
+<Layout title="App" favicon="" themeColor="">
+  <div class="flex flex-col sm:flex-row h-full">
+    <header
+      class="relative z-10 overflow-hidden w-full h-1/2 sm:h-auto sm:w-1/2"
+    >
+      <div class="absolute z-0 inset-0">
+        <img src="/bg.jpg" class="w-full h-full object-cover object-center" />
+      </div>
+      <div
+        class="absolute z-10 inset-0 flex items-center justify-center transition-opacity"
+        style={{ animation: "wait 1s, fadeIn 1s 1s" }}
+      >
+        <div
+          class="relative h-3/4 sm:h-auto sm:w-3/4 aspect-square object-cover rounded-full p-1 bg-white/50 border border-solid border-white/25 shadow-lg"
+        >
+          <img src="/profile.jpg" class="w-full rounded-full" />
+          <h1
+            class="absolute bottom-0 inset-x-0 h-12 text-4xl text-white text-center"
+          >
+            Ezequiel Schwartzman
+          </h1>
+        </div>
+      </div>
+    </header>
+    <nav
+      class="z-20 absolute bottom-0 inset-x-0 h-16 md:h-auto md:relative bg-[#202e2e] backdrop-blur-sm flex md:flex-col items-center justify-center text-white uppercase tracking-widest text-xs font-bold"
+    >
+      <ul class="contents" role="navigation" aria-label="Main">
+        <NavItem href="/">Ezequiel</NavItem>
+        <NavItem href="/work">Work</NavItem>
+        <NavItem href="/clients">Clients</NavItem>
+        <NavItem href="/articles">Articles</NavItem>
+        <NavItem href="/videos">Videos</NavItem>
+        <NavItem href="/notes">Notes</NavItem>
+        <NavItem href="/links">Links</NavItem>
+      </ul>
+    </nav>
+    <main class="min-h-[50%] sm:w-1/2 bg-[#F2D7B5] relative">
+      <div class="absolute inset-0 z-0"></div>
+    </main>
+  </div>
+</Layout>
