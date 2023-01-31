@@ -13,6 +13,8 @@ import elm from "astro-integration-elm";
 
 import AstroPWA from "@vite-pwa/astro";
 
+import yaml from "@rollup/plugin-yaml";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -26,4 +28,7 @@ export default defineConfig({
   ], // AstroPWA()
   output: "server",
   adapter: vercel(),
+  vite: {
+    plugins: [yaml()],
+  },
 });

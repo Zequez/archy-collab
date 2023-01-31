@@ -1,0 +1,24 @@
+name: Nick Feint
+photo: /public/profiles/nick.jpg
+background: /public/backgrounds/mountains.jpg
+modules:
+  -
+    module: home
+    name: Nick
+    value: Your home page
+  -
+    module: songs
+    name: Songs
+    value: List of your songs
+  -
+    module: gigs
+    name: Gigs
+    value: Past and future gigs
+  -
+    module: legends
+    name: Legends
+    value: Legends?
+  -
+    module: contact
+    name: Contact
+    value: Contact information, links to Instagram, Facebook, etc

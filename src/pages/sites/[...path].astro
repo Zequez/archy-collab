@@ -1,0 +1,124 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavItem from "@components/NavItem.astro";
+import ezequiel from "@/agents/ezequiel.yml";
+import nick from "@/agents/nick.yml";
+import defaultAgent from "@/agents/default.yml";
+
+type Agent = {
+  name: string;
+  photo: string;
+  background: string;
+  modules: Module[];
+};
+
+type Module = {
+  module: string;
+  name: string;
+  value: string;
+  color: number;
+};
+
+const agents: { [key: string]: Agent } = { ezequiel, nick, defaultAgent };
+
+const { path } = Astro.params;
+
+const activeModule = (
+  ((path || "").match(/\/[a-z]+$/) || [null])[0] || "/home"
+).slice(1);
+
+const agentName = (path || "").split("/")[0];
+const agent = agents[agentName] || agents.defaultAgent;
+
+let currentColor = 10;
+for (let i = 0; i < agent.modules.length; ++i) {
+  agent.modules[i].color = currentColor;
+  currentColor += 50;
+}
+
+const agentActiveModule = agent.modules.find((m) => m.module === activeModule);
+---
+
+<Layout title="App" favicon="" themeColor="">
+  <div class="flex flex-col sm:flex-row h-full">
+    <header
+      class="relative z-10 overflow-hidden w-full h-1/2 sm:h-auto sm:w-1/2 sm:max-w-[600px]"
+    >
+      <div class="absolute z-0 inset-0">
+        <img
+          src={agent.background}
+          class="w-full h-full object-cover object-center"
+        />
+      </div>
+      <div
+        class="absolute z-10 inset-0 flex flex-col items-center justify-center transition-opacity pb-0 sm:pb-16 md:pb-0"
+      >
+        <div
+          class="relative mb-4 h-3/4 sm:h-auto sm:w-3/4 aspect-square object-cover rounded-full p-1 bg-white/50 border border-solid border-white/25 shadow-lg backdrop-blur-sm"
+          style={{ animation: "wait 0.5s, scaleFadeIn 1.5s 0.5s" }}
+        >
+          <img src={agent.photo} class="w-full h-full rounded-full" />
+        </div>
+        <h1
+          class="text-5xl text-white text-center font-thin whitespace-nowrap sm:whitespace-normal"
+          style={{ textShadow: "0 1px 0 #0005, 0 0 5px #000" }}
+        >
+          {agent.name}
+        </h1>
+      </div>
+    </header>
+    <nav
+      class="z-30 fixed md:relative shadow-[0_0_8px_#0005,0_0_2px_#000a] bottom-0 inset-x-0 pt-1 md:pt-0 md:pr-1 md:h-auto bg-[#202e2e] backdrop-blur-sm flex md:flex-col items-center justify-center text-white uppercase tracking-widest text-xs font-bold overflow-auto"
+      style="background-image: linear-gradient(to right, hsla(0, 100%, 0%, 0.1), #0000 40%, #0000 60% ,hsla(0, 100%, 100%, 0.05)"
+    >
+      <div
+        class="absolute z-0 inset-0 shadow-[inset_0_2px_0_#fff3] md:shadow-[inset_2px_0_0_#fff3,inset_-2px_0_0_#fff3]"
+      >
+      </div>
+      <ul class="relative z-10 contents" role="navigation" aria-label="Main">
+        {
+          agent.modules.map(({ module, name, color }) => (
+            <NavItem active={activeModule} module={module} color={color}>
+              {name}
+            </NavItem>
+          ))
+        }
+      </ul>
+    </nav>
+    <main
+      class="relative z-20 flex-grow min-h-[50%] sm:w-1/2 border-t-4 sm:border-t-0 sm:border-l-4 border-black/20"
+    >
+      <div
+        class="sm:absolute pb-20 sm:pb-0 sm:inset-0 z-0 p-6 text-lg font-light bg-[#F2D7B5] text-black/75 tracking-wide sm:overflow-auto"
+      >
+        {
+          agentActiveModule ? (
+            <>
+              <h2 class="uppercase text-4xl mb-3 font-black">
+                {agentActiveModule.name}
+              </h2>
+              <p>{agentActiveModule.value}</p>
+              <p class="">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Pellentesque vel fringilla diam, euismod pulvinar tellus. Sed
+                sed lorem ultricies, finibus massa sit amet, lobortis felis.
+                Donec semper velit non interdum congue. Vestibulum ac
+                sollicitudin leo. Vivamus vitae odio massa. Vivamus lacinia
+                placerat magna at varius. Nunc non ligula ut libero rutrum
+                sollicitudin. Nam porta ultricies quam ac sodales. Integer
+                aliquam congue massa in imperdiet. Aliquam erat volutpat. In
+                eleifend dolor eget risus suscipit tempus. Cras accumsan est
+                eleifend, iaculis odio nec, vestibulum enim. Vivamus molestie
+                ullamcorper odio at lacinia. Phasellus vel finibus ipsum. Nam
+                efficitur odio nibh, quis fringilla sapien dapibus non. Aenean
+                auctor purus non nibh elementum rutrum.
+              </p>
+            </>
+          ) : (
+            "404"
+          )
+        }
+      </div>
+    </main>
+  </div>
+</Layout>
