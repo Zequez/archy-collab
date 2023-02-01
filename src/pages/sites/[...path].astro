@@ -13,7 +13,7 @@ type Agent = {
 };
 
 type Module = {
-  module: string;
+  path: string;
   name: string;
   value: string;
   color: number;
@@ -23,20 +23,43 @@ const agents: { [key: string]: Agent } = { ezequiel, nick, defaultAgent };
 
 const { path } = Astro.params;
 
-const activeModule = (
-  ((path || "").match(/\/[a-z]+$/) || [null])[0] || "/home"
-).slice(1);
+type RouteInformation = {
+  domainName: string;
+  pageName: string;
+};
 
-const agentName = (path || "").split("/")[0];
-const agent = agents[agentName] || agents.defaultAgent;
+function extractRouteInformation(path: string = ""): RouteInformation {
+  const [domainName, ...ppp] = path.split("/");
+  const pageName = ppp.join("/");
 
-let currentColor = 10;
-for (let i = 0; i < agent.modules.length; ++i) {
-  agent.modules[i].color = currentColor;
-  currentColor += 50;
+  return { pageName, domainName };
 }
 
-const agentActiveModule = agent.modules.find((m) => m.module === activeModule);
+const { pageName, domainName } = extractRouteInformation(path);
+
+function selectActiveAgent(domainName: string) {
+  return agents[domainName] || agents.defaultAgent;
+}
+
+const agent = selectActiveAgent(domainName);
+
+console.log("RouteInformation", pageName, domainName);
+console.log("PATH", path);
+
+const activePath = ((path || "").match(/\/[a-z]+$/) || [null])[0] || "/";
+
+function addColorsToModules(modules: Module[]): Module[] {
+  let currentColor = 10;
+  for (let i = 0; i < agent.modules.length; ++i) {
+    agent.modules[i].color = currentColor;
+    currentColor += 50;
+  }
+  return modules;
+}
+
+addColorsToModules(agent.modules);
+
+const activeModule = agent.modules.find((m) => m.path === activePath);
 ---
 
 <Layout title="App" favicon="" themeColor="">
@@ -77,8 +100,8 @@ const agentActiveModule = agent.modules.find((m) => m.module === activeModule);
       </div>
       <ul class="relative z-10 contents" role="navigation" aria-label="Main">
         {
-          agent.modules.map(({ module, name, color }) => (
-            <NavItem active={activeModule} module={module} color={color}>
+          agent.modules.map(({ path, name, color }) => (
+            <NavItem activePath={activeModule?.path} href={path} color={color}>
               {name}
             </NavItem>
           ))
@@ -92,12 +115,12 @@ const agentActiveModule = agent.modules.find((m) => m.module === activeModule);
         class="sm:absolute pb-20 sm:pb-0 sm:inset-0 z-0 p-6 text-lg font-light bg-[#F2D7B5] text-black/75 tracking-wide sm:overflow-auto"
       >
         {
-          agentActiveModule ? (
+          activeModule ? (
             <>
               <h2 class="uppercase text-4xl mb-3 font-black">
-                {agentActiveModule.name}
+                {activeModule.name}
               </h2>
-              <p>{agentActiveModule.value}</p>
+              <p>{activeModule.value}</p>
               <p class="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Pellentesque vel fringilla diam, euismod pulvinar tellus. Sed

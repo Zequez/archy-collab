@@ -3,36 +3,36 @@ photo: /public/profiles/ezequiel.jpg
 background: /public/backgrounds/leaves.jpg
 modules:
   -
-    module: work
+    path: /work
     name: Work
     value: This is my work bla bla bla
   -
-    module: clients
+    path: /clients
     name: Clients
     text: 'These are my clients: [Nick Feint](https://nickfeint.com), [El Templo (Nacho Bordón)](https://nacho.archy.site)'
   -
-    module: home
+    path: /
     name: Ezequiel
     value:
       Ezequiel is an experimenter. Currently based on Mar del Plata, Argentina. Timezone is GMT-3.
       He's parent of Coral and his primary secondary is Celeste Balencia.
   -
-    module: articles
+    path: /articles
     name: Articles
     value:
       Much to write yet.
   -
-    module: schedule
+    path: /schedule
     name: Schedule
     value:
       My scheduled activities
   -
-    module: notes
+    path: /notes
     name: Notes
     value:
       Notes on my [Logseq Vault](https://notes.zequez.space)
   -
-    module: links
+    path: /links
     name: Links
     value: |
       Links to my social networks:

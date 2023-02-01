@@ -1,12 +1,10 @@
 ---
 import cx from "classnames";
-const { module, active, color } = Astro.props;
+const { href, activePath, color } = Astro.props;
 const hsla = `hsl(${color},50%,50%)`;
 const activeClass = `md:-ml-[2px]`;
-const isActive = active === module;
+const isActive = activePath === href;
 const style = isActive ? { backgroundColor: hsla } : {};
-
-const href = module === "home" ? "/" : `/${module}`;
 ---
 
 <li
