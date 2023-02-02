@@ -4,29 +4,66 @@ background: /public/backgrounds/leaves.jpg
 navColor: '#202e2e'
 modules:
   -
+    path: /
+    name: Ezequiel
+    value: |
+      Ezequiel is an experimenter. Currently based on Mar del Plata, Argentina. Timezone is GMT-3.
+      He's parent of Coral and his primary secondary is Celeste Balencia.
+
+  -
     path: /work
     name: Work
-    value: This is my work bla bla bla
+    value: |
+      Ezequiel is creating possibilities for the digital operations of his clients.
+
+      He's shipping upgrades to it's clients websites systems with new features every week.
+
+      He's releasing all his work on the public domain.
+
+      He's making sure all his clients websites are available.
+
+      He's receiving requests for new features from clients and investors.
+
+      He's meeting with clients 1-1 to understand the complexities of their work and offer possibilities to simplify through digital operations.
+
+      He's calling himself a "Digital Operations Specialist".
+
+      He's asking clients for an annual contribution of $50-100 for digital operations support.
   -
     path: /clients
     name: Clients
-    text: 'These are my clients: [Nick Feint](https://nickfeint.com), [El Templo (Nacho Bordón)](https://nacho.archy.site)'
-  -
-    path: /
-    name: Ezequiel
-    value:
-      Ezequiel is an experimenter. Currently based on Mar del Plata, Argentina. Timezone is GMT-3.
-      He's parent of Coral and his primary secondary is Celeste Balencia.
-  -
-    path: /articles
-    name: Articles
-    value:
-      Much to write yet.
+    value: |
+      These are my clients so far:
+
+        - [Nick Feint](https://nickfeint.com)
+        - [El Templo (Nacho Bordón)](https://nacho.archy.site)
+
+      ---
+
+      And clients that don't yet know they are my clients:
+
+      Want to be my client? [Contact me](https://t.me/zequez)
+
+  # -
+  #   path: /articles
+  #   name: Articles
+  #   value:
+  #     Much to write yet.
   -
     path: /schedule
     name: Schedule
-    value:
-      My scheduled activities
+    value: |
+      Timezone is GMT-3
+
+      Lunes, Miércoles y Viernes.
+
+      Con Coral 💛💚🤍 a la mañana (8 a 14hs). Cuidamos y jugamos con Cori mientras Cele está trabajando, y tomamos mates, charlamos y podemos hasta preparar el almuerzo.
+
+      Sino coworking 💚🤍 esos mismos días a la tarde (17hs hasta la noche) Coral se queda con Celeste y yo hago trabajo que necesita más concentración.
+
+      Sino a almorzar cualquier dia de la semana tipo con Coral y Celeste 💙💛💚🤍 (12 a 16hs), me decís y armamos un almuerzo colaborativo acá en casa.
+
+      También acepto  propuestas de ir a la playa o plazas los Martes, Sábados y Domingos a la tarde. O las mañanas con Coral.
   -
     path: /notes
     name: Notes
@@ -37,10 +74,12 @@ modules:
     name: Links
     value: |
       Links to my social networks:
+      - [Telegram](https://t.me/Zequez)
       - [Facebook](https://facebook.com/Zequez)
       - [Instagram](https://instagram.com/Ezequiel.Schwartzman)
       - [YouTube](https://www.youtube.com/channel/UCXhH5g4vDaci5EcqYaYv1kw)
       - [Github](https://github.com/zequez)
+      - [LinkedIn](https://www.linkedin.com/in/zequez/)
 
 
 

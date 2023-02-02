@@ -1,10 +1,11 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import NavItem from "@components/NavItem.astro";
 import ezequiel from "@/agents/ezequiel.yml";
 import nick from "@/agents/nick.yml";
 import defaultAgent from "@/agents/default.yml";
+import { hsla } from "@lib/utils";
 import Nav from "@components/Nav";
+import Markdown from "@components/modules/Markdown.astro";
 
 const agents: { [key: string]: Agent } = { ezequiel, nick, defaultAgent };
 
@@ -47,6 +48,10 @@ function addColorsToModules(modules: Module[]): Module[] {
 addColorsToModules(agent.modules);
 
 const activeModule = agent.modules.find((m) => m.path === activePath);
+
+const moduleFromType = (moduleType: string, value: any) => {};
+
+const activeModuleColor = hsla(activeModule?.color || 0);
 ---
 
 <Layout title="App" favicon="" themeColor="">
@@ -83,35 +88,35 @@ const activeModule = agent.modules.find((m) => m.path === activePath);
       bgColor={agent.navColor}
       client:load
     />
-    <main
-      class="relative z-20 flex-grow min-h-[50%] sm:w-1/2 border-t-4 sm:border-t-0 sm:border-l-4 border-black/20 bg-[#F2D7B5]"
-    >
+    <main class="relative z-20 flex-grow min-h-[50%] sm:w-1/2 bg-[#F2D7B5]">
       <div
-        class="sm:absolute pb-20 sm:pb-0 sm:inset-0 z-0 p-6 text-lg font-light text-black/75 tracking-wide sm:overflow-auto transition-opacity transition-swup"
+        class={`z-0 sm:absolute
+        sm:pb-0
+        pb-20
+        sm:inset-0
+        p-6
+        text-lg font-light text-black/75 tracking-wide
+        sm:overflow-auto transition-opacity transition-swup`}
         id="swup"
       >
+        <div
+          class="absolute inset-0 pointer-events-none hidden sm:block opacity-50"
+          style={{ boxShadow: `inset 8px 0 0 0 ${activeModuleColor}` }}
+        >
+        </div>
+        <div
+          class="absolute inset-0 pointer-events-none block sm:hidden opacity-50"
+          style={{ boxShadow: `inset 0 8px 0 0 ${activeModuleColor}` }}
+        >
+        </div>
+
         {
           activeModule ? (
             <>
               <h2 class="uppercase text-4xl mb-3 font-black">
                 {activeModule.name}
               </h2>
-              <p>{activeModule.value}</p>
-              <p class="">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque vel fringilla diam, euismod pulvinar tellus. Sed
-                sed lorem ultricies, finibus massa sit amet, lobortis felis.
-                Donec semper velit non interdum congue. Vestibulum ac
-                sollicitudin leo. Vivamus vitae odio massa. Vivamus lacinia
-                placerat magna at varius. Nunc non ligula ut libero rutrum
-                sollicitudin. Nam porta ultricies quam ac sodales. Integer
-                aliquam congue massa in imperdiet. Aliquam erat volutpat. In
-                eleifend dolor eget risus suscipit tempus. Cras accumsan est
-                eleifend, iaculis odio nec, vestibulum enim. Vivamus molestie
-                ullamcorper odio at lacinia. Phasellus vel finibus ipsum. Nam
-                efficitur odio nibh, quis fringilla sapien dapibus non. Aenean
-                auctor purus non nibh elementum rutrum.
-              </p>
+              <Markdown value={activeModule.value} />
             </>
           ) : (
             "404"
