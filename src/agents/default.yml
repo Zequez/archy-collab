@@ -1,6 +1,7 @@
 name: Your Name
 photo: '/public/profiles/default.png'
 background: /public/backgrounds/leaves.jpg
+navColor: '#333'
 modules:
   -
     path: /

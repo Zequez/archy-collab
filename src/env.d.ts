@@ -5,3 +5,18 @@ declare module "*.elm" {
   const content: () => any;
   export default content;
 }
+
+type Agent = {
+  name: string;
+  photo: string;
+  background: string;
+  navColor: string;
+  modules: Module[];
+};
+
+type Module = {
+  path: string;
+  name: string;
+  value: string;
+  color: number;
+};

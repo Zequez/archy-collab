@@ -11,3 +11,12 @@ export const pUrl = (site: string = "", usePath = false) => {
     usePath && site ? `/sites/${site}` : ""
   }`;
 };
+
+export const hsla = (
+  color: number,
+  sat: number = 50,
+  light: number = 50,
+  opacity: number = 1
+) => {
+  return `hsla(${color},${sat}%,${light}%,${opacity})`;
+};

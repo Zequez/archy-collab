@@ -1,6 +1,7 @@
 name: Ezequiel Schwartzman
 photo: /public/profiles/ezequiel.jpg
 background: /public/backgrounds/leaves.jpg
+navColor: '#202e2e'
 modules:
   -
     path: /work

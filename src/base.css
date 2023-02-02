@@ -4,7 +4,7 @@
 
 @layer components {
   .link {
-    @apply text-green-600 underline hover:text-green-500;
+
   }
 }
 
@@ -36,4 +36,12 @@
 @keyframes scaleFadeIn {
   0% {opacity: 0; transform: scale(0.95);}
   100% {opacity: 1; transform: scale(1);}
+}
+
+.transition-swup {
+  opacity: 1;
+}
+
+html.is-animating .transition-swup {
+  opacity: 0;
 }

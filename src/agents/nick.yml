@@ -1,6 +1,7 @@
 name: Nick Feint
 photo: /public/profiles/nick.jpg
 background: /public/backgrounds/mountains.jpg
+navColor: #343489
 modules:
   -
     path: /
