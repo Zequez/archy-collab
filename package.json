@@ -20,6 +20,7 @@
     "@nanostores/persistent": "^0.7.0",
     "@nanostores/react": "^0.4.1",
     "@supabase/supabase-js": "^2.2.3",
+    "@tomic/react": "^0.35.0-beta.1",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "astro": "^1.6.12",

@@ -1187,6 +1187,16 @@
   dependencies:
     use-sync-external-store "^1.2.0"
 
+"@noble/ed25519@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@noble/ed25519/-/ed25519-1.6.0.tgz#b55f7c9e532b478bf1d7c4f609e1f3a37850b583"
+  integrity sha512-UKju89WV37IUALIMfKhKW3psO8AqmrE/GvH6QbPKjzolQ98zM7WmGUeY+xdIgSf5tqPFf75ZCYMgym6E9Jsw3Q==
+
+"@noble/hashes@^0.5.7":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-0.5.9.tgz#9f3051a4cc6f7c168022b3b7fbbe9fe2a35cccf0"
+  integrity sha512-7lN1Qh6d8DUGmfN36XRsbN/WcGIPNtTGhkw26vWId/DlCIGsYJJootTtPGghTLcn/AaXPx2Q0b3cacrwXa7OVw==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -1380,6 +1390,24 @@
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
     defer-to-connect "^1.0.1"
+
+"@tomic/lib@0.35.0-beta.1":
+  version "0.35.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@tomic/lib/-/lib-0.35.0-beta.1.tgz#9ac47b84d45225c400416ba7812aee03e1a8e142"
+  integrity sha512-JiPICyR1WkiPu+v7Ip5gv7pNA3HtZYVvpd7mzJi85MNTgEGpEWjSSlUDLZXU9vdkADkSYC+t4iKVeLUF1FSQWw==
+  dependencies:
+    "@noble/ed25519" "1.6.0"
+    "@noble/hashes" "^0.5.7"
+    base64-arraybuffer "^1.0.2"
+    cross-fetch "^3.1.4"
+    fast-json-stable-stringify "^2.1.0"
+
+"@tomic/react@^0.35.0-beta.1":
+  version "0.35.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@tomic/react/-/react-0.35.0-beta.1.tgz#e605ce77f6cddf88e8f647c4e4469707137a7198"
+  integrity sha512-N5ztUxFrrDk/tD31yh1hWlOwR+TDcsYw4quPgNkhK9FbKRlLP9Xvbmh3DGTrrivMgV8LJJo+K0Bi8qEnuYb00w==
+  dependencies:
+    "@tomic/lib" "0.35.0-beta.1"
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -2098,6 +2126,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base64-arraybuffer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#1c37589a7c4b0746e34bd1feb951da2df01c1bdc"
+  integrity sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==
+
 base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -2503,7 +2536,7 @@ core-util-is@1.0.2:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==
 
-cross-fetch@^3.1.5:
+cross-fetch@^3.1.4, cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
