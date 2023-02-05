@@ -17,30 +17,27 @@ import {
   saveAgentToLocalStorage,
 } from "@lib/agentStorage";
 
-// type BlankSiteProps = {
-//   initialContent: string;
-// }
+type BlankSiteProps = {
+  config: string;
+};
 
 // const agentStore = atom<Agent | null>(null);
 
-const initialAgent = getAgentFromLocalStorage();
-console.log("Initial agent", initialAgent);
 const store = new Store({
-  agent: initialAgent,
   serverUrl: "https://atomicdata.dev",
 });
 store.on(StoreEvents.AgentChanged, saveAgentToLocalStorage);
 
-const App = () => {
+const App = ({ config }: BlankSiteProps) => {
   return (
     <StoreContext.Provider value={store}>
-      <BlankSite />
+      <BlankSite config={config} />
     </StoreContext.Provider>
   );
 };
 
-const BlankSite = ({}: {}) => {
-  const [isLoading, setIsLoading] = useState(true);
+const BlankSite = ({ config }: BlankSiteProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const moduleConfig = useResource(
     "https://atomicdata.dev/module-config/tlpiqvfbd2e"
   );
@@ -49,28 +46,27 @@ const BlankSite = ({}: {}) => {
     "https://atomicdata.dev/property/pq0cvnocfr",
     { commit: true }
   );
-  const [text, setText] = useState(configJson);
+  const [text, setText] = useState(configJson || config);
 
   useEffect(() => {
-    setText(configJson);
-  }, [configJson]);
-
-  useEffect(() => {
-    console.log("Config JSON changed", configJson);
-    if (configJson) {
-      setIsLoading(false);
-    }
+    setText(configJson || config);
   }, [configJson]);
 
   // useEffect(() => {
-  //   store.on(StoreEvents.AgentChanged, () => )
-  // }, [])
+  //   console.log("Config JSON changed", configJson);
+  //   if (configJson) {
+  //     setIsLoading(false);
+  //   }
+  // }, [configJson]);
 
-  // const [secretKey, setSecretKey] = useState("");
-  // const [agent, setAgent] = useCurrentAgent();
-  const [agent, setAgent] =
-    typeof window === "undefined" ? useState<Agent>() : useCurrentAgent();
-  // const [agent, setAgent] = useState<Agent>();
+  useEffect(() => {
+    const storedAgent = getAgentFromLocalStorage();
+    if (storedAgent) {
+      setAgentIfChanged(agent, storedAgent);
+    }
+  }, []);
+
+  const [agent, setAgent] = useState<Agent | undefined>(store.getAgent());
 
   function handleUpdateSecretKey(secret: string) {
     console.log(secret);
@@ -85,6 +81,7 @@ const BlankSite = ({}: {}) => {
 
   function setAgentIfChanged(oldAgent: Agent | undefined, newAgent: Agent) {
     if (JSON.stringify(oldAgent) !== JSON.stringify(newAgent)) {
+      store.setAgent(newAgent);
       setAgent(newAgent);
     }
   }
