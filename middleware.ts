@@ -1,6 +1,45 @@
 const DEV_HOST = "localhost:3000";
 const PROD_HOST = "archy.site";
 
+export const hostMap: { [key: string]: string } = {
+  // 'archy.site': '',
+  // 'localhost:3000': '',
+  "ezequielschwartzman.org": "ezequiel",
+  "nickfeint.com": "nick",
+  "eltemplo.com": "templo.nach",
+};
+
+export const modulesMap: { [key: string]: string } = {
+  // '_': 'index',
+  // ezequiel
+  ezequiel: "embedded-links",
+  "cv.ezequiel": "cv",
+  "wall.ezequiel": "plain-page",
+  "mission-pomodoros.ezequiel": "embedded-gsheets",
+  // nick
+  nick: "embedded-links",
+  "songs.nick": "songs",
+  "templo.nach": "links",
+};
+
+const baseHost =
+  process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
+    ? PROD_HOST
+    : DEV_HOST;
+
+// const modules = ['cv', 'links', 'songs'];
+
+function replaceFirstHostMap() {}
+
+// ezequielschwartzman.org => /sites/links/ezequiel"
+// cv.ezequiel => /sites/cv/ezequiel
+// "nickfeint.com => "/sites/links"
+
+/*
+if url is on full hosts mapping replace whole url and
+
+*/
+
 export const config = {
   matcher: [
     /*
@@ -12,7 +51,43 @@ export const config = {
   ],
 };
 
-export function validateURL(url: string | URL): string {
+function removeBaseSharedHost(fullHostname: string): string {
+  return fullHostname.replace(new RegExp(`.${baseHost}$`), "");
+}
+
+function rewriteIndependentHostWishSharedHost(anyHost: string): string {
+  return hostMap[anyHost] || anyHost;
+}
+
+export default function middleware(req: Request) {
+  const url = new URL(req.url);
+
+  const hostname = req.headers.get("host");
+  if (!hostname) return responseNext();
+
+  const agentHost = removeBaseSharedHost(
+    rewriteIndependentHostWishSharedHost(hostname)
+  );
+  const choosenModule = modulesMap[agentHost];
+  if (!choosenModule) return responseNext();
+
+  const agentHostParts = agentHost.split(".");
+  const agent = agentHostParts.slice(-1);
+  if (!agent) return responseNext();
+
+  const newPath = `/modules/${choosenModule}/${agent}`;
+
+  // This is needed otherwise the host lookup fails and the middleware crashes
+  url.host = baseHost;
+
+  url.pathname = newPath;
+  return responseRewrite(url);
+}
+
+// This is something mostly extracted from NextJS
+//-----------------------------------------
+
+function validateURL(url: string | URL): string {
   try {
     return String(new URL(String(url)));
   } catch (error: any) {
@@ -24,41 +99,15 @@ export function validateURL(url: string | URL): string {
   }
 }
 
-export default function middleware(req: Request) {
-  const url = new URL(req.url);
-  const baseHost =
-    process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
-      ? PROD_HOST
-      : DEV_HOST;
-  const hostname = req.headers.get("host") || `demo.${baseHost}`;
-  const currentHost = hostname.replace(`.${baseHost}`, "");
+function responseRewrite(url: string | URL) {
+  const headers = new Headers();
+  headers.set("x-middleware-rewrite", validateURL(url));
+  console.log("Rewriting", validateURL(url));
+  return new Response(null, { headers });
+}
 
-  function responseRewrite(url: string | URL) {
-    const headers = new Headers();
-    headers.set("x-middleware-rewrite", validateURL(url));
-    console.log("Rewriting", validateURL(url));
-    return new Response(null, { headers });
-  }
-
-  function responseNext() {
-    const headers = new Headers();
-    headers.set("x-middleware-next", "1");
-    new Response(null, { headers });
-  }
-
-  url.host = baseHost;
-
-  if (currentHost === "app") {
-    url.pathname = `/app${url.pathname}`;
-    return responseRewrite(url);
-  }
-
-  // It's the base app
-  if (hostname === DEV_HOST || hostname === PROD_HOST) {
-    return responseNext();
-  }
-
-  url.pathname = `/sites/${currentHost}${url.pathname}`;
-
-  return responseRewrite(url);
+function responseNext() {
+  const headers = new Headers();
+  headers.set("x-middleware-next", "1");
+  new Response(null, { headers });
 }

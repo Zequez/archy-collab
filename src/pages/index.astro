@@ -3,7 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import { pUrl } from "../lib/utils";
 ---
 
-<Layout title="Experimental Collaborative Web Building Platform">
+<Layout
+  title="Experimental Collaborative Web Building Platform"
+  favicon=""
+  themeColor=""
+>
   <style>
     a {
       color: green;
@@ -23,8 +27,13 @@ import { pUrl } from "../lib/utils";
       weave teams.
     </p>
     <p class="mb-4">
-      <a href="https://ezequielschwartzman.archy.site">Ezequiel Schwartzman</a> is
-      comitted to make this happen <a href="https://t.me/zequez"
+      Right now this serves as a general workshop space to host multiple modular
+      based apps for different people with a same codebase and unlimited domain
+      names.
+    </p>
+    <p class="mb-4">
+      <a href="https://ezequielschwartzman.org">Ezequiel Schwartzman</a> is comitted
+      to make this happen <a href="https://t.me/zequez"
         >you can ask him directly on Telegram</a
       > if you want to learn more or participate.
     </p>
@@ -33,19 +42,5 @@ import { pUrl } from "../lib/utils";
         >All the source code is at Github</a
       >.
     </p>
-    <p class="mb-4">Current spaces on the platform:</p>
-    <ul class="pl-8">
-      <li>Platform Home Page (this page) - <a href={pUrl()}>archy.site</a></li>
-      <li>
-        Ezequiel Schwartzman - <a href={pUrl("ezequielschwartzman")}
-          >ezequielschwartzman.archy.site</a
-        >
-      </li>
-      <li>
-        Google Sheets Based Website - <a href={pUrl("gsheets-based-website")}
-          >gsheets-based-website.archy.site</a
-        >
-      </li>
-    </ul>
   </main>
 </Layout>
