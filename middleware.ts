@@ -70,10 +70,12 @@ export default function middleware(req: Request) {
   );
   const choosenModule = modulesMap[agentHost];
   if (!choosenModule) return responseNext();
+  // if (!choosenModule) return responseRedirect(`http://${baseHost}`);
 
   const agentHostParts = agentHost.split(".");
   const agent = agentHostParts.slice(-1);
   if (!agent) return responseNext();
+  // if (!agent) return responseRedirect(`http://${baseHost}`);
 
   const newPath = `/modules/${choosenModule}/${agent}`;
 
@@ -85,6 +87,8 @@ export default function middleware(req: Request) {
 }
 
 // This is something mostly extracted from NextJS
+// It's deeply hidden, and the Github search cannot find it for some reason,
+// so I'm leaving the link here: https://github.com/vercel/next.js/blob/canary/packages/next/src/server/web/spec-extension/response.ts
 //-----------------------------------------
 
 function validateURL(url: string | URL): string {
@@ -110,4 +114,10 @@ function responseNext() {
   const headers = new Headers();
   headers.set("x-middleware-next", "1");
   new Response(null, { headers });
+}
+
+function responseRedirect(url: string) {
+  const headers = new Headers();
+  headers.set("Location", validateURL(url));
+  return new Response(null, { headers });
 }
