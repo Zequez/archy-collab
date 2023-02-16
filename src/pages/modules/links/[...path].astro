@@ -14,31 +14,99 @@ type Links = {
 };
 ---
 
+<style>
+  main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #acc87a;
+    color: white;
+  }
+
+  img {
+    max-width: 14rem;
+    height: auto;
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 100;
+    white-space: pre;
+    line-height: 3.5rem;
+    align-self: flex-start;
+    text-align: center;
+  }
+
+  pre {
+    display: none;
+  }
+
+  ul {
+  }
+
+  a {
+    font-size: 1.25rem;
+    line-height: 2.5rem;
+    font-weight: 300;
+    display: block;
+    padding: 0 14px 0 14px;
+    margin-bottom: 0.5rem;
+    color: white;
+    background: #967ac8;
+    border: 1px solid #967ac8;
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.25);
+    /* inset 0 4px 5px 10px hsla(0, 0%, 0%, 0.01); */
+    transition: ease 0.25s all;
+    text-align: center;
+  }
+
+  a.text-link {
+    min-width: 12rem;
+  }
+
+  a:hover,
+  a:active {
+    background: #a78dd4;
+    /* color: #967ac8; */
+    box-shadow: none;
+    transition: none;
+  }
+</style>
+
 <Layout
   title={(moduleData && moduleData.title) || ""}
-  favicon={""}
+  favicon={`/agents/${agentName}/favicon.ico`}
   themeColor={""}
 >
   {
     agent ? (
       moduleData ? (
         <main>
-          <h1 class="text-4xl">{moduleData.title}</h1>
-          <pre class="hidden">{JSON.stringify(moduleData, null, 2)}</pre>
-          <ul class="pl-8">
-            {moduleData.links.map(({ text, href }) => (
-              <li>
-                <a href={href}>{text}</a>
-              </li>
-            ))}
-          </ul>
-          <ul>
-            {moduleData.iconLinks.map(({ icon, href }) => (
-              <li class="inline-block">
-                <a href={href}>{icon}</a>
-              </li>
-            ))}
-          </ul>
+          <div class="sm:flex">
+            <div class="flex flex-col items-center justify-center">
+              <img src={`/agents/${agentName}/profile.jpg`} />
+              <h1 class="mb-4 sm:mb-0 sm:mr-4">{moduleData.title}</h1>
+            </div>
+            <pre>{JSON.stringify(moduleData, null, 2)}</pre>
+            <ul>
+              {moduleData.links.map(({ text, href }) => (
+                <li>
+                  <a href={href} class="text-link">
+                    {text}
+                  </a>
+                </li>
+              ))}
+              {moduleData.iconLinks.map(({ icon, href }) => (
+                <li class="inline-block">
+                  <a href={href}>[{icon}]</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </main>
       ) : (
         "Add .links namespace to agent"

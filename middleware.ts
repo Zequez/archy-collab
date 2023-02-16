@@ -35,7 +35,7 @@ export const config = {
      * 1. thes ones mentioned and...
      * 2. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!Users|assets|public|@id|@vite|@fs|src|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
+    "/((?!Users|assets|public|@id|@vite|@fs|src|agents|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
   ],
 };
 

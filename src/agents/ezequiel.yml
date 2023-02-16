@@ -4,13 +4,13 @@ background: /public/backgrounds/leaves.jpg
 navColor: '#202e2e'
 
 links:
-  title: Ezequiel Schwartzman
+  title: "Ezequiel\nSchwartzman"
   links:
     -
-      text: Biography
-      href: https//bio.ezequielschwartzman.org
+      text: Bio
+      href: https://bio.ezequielschwartzman.org
     -
-      text: Work Experience
+      text: Work
       href: https://cv.ezequielschwartzman.org
     -
       text: Notes
