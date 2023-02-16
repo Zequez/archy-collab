@@ -4,12 +4,15 @@
     "baseUrl": "./",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-
+    "esModuleInterop": true,
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@lib/*": ["src/lib/*"]
     }
-  }
+  },
+  "ts-node": {
+    "esm": true
+  },
 }
