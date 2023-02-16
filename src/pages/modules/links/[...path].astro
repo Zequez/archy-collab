@@ -1,4 +1,50 @@
 ---
+import { modulesMap } from "@@/middleware";
+import * as agents from "@/agents";
+import Layout from "@layouts/Layout.astro";
+
+const agentName = Astro.params.path || "";
+const agent = (agents as { [key: string]: any })[agentName];
+const moduleData = agent.links as Links;
+
+type Links = {
+  title: string;
+  links: { text: string; href: string }[];
+  iconLinks: { icon: string; href: string }[];
+};
 ---
 
-<h1>Hey!</h1>
+<Layout
+  title={(moduleData && moduleData.title) || ""}
+  favicon={""}
+  themeColor={""}
+>
+  {
+    agent ? (
+      moduleData ? (
+        <main>
+          <h1 class="text-4xl">{moduleData.title}</h1>
+          <pre class="hidden">{JSON.stringify(moduleData, null, 2)}</pre>
+          <ul class="pl-8">
+            {moduleData.links.map(({ text, href }) => (
+              <li>
+                <a href={href}>{text}</a>
+              </li>
+            ))}
+          </ul>
+          <ul>
+            {moduleData.iconLinks.map(({ icon, href }) => (
+              <li class="inline-block">
+                <a href={href}>{icon}</a>
+              </li>
+            ))}
+          </ul>
+        </main>
+      ) : (
+        "Add .links namespace to agent"
+      )
+    ) : (
+      <div>No agent ${agentName} on /src/agents/</div>
+    )
+  }
+</Layout>

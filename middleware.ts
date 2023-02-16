@@ -13,7 +13,7 @@ export const hostMap: { [key: string]: string } = {
 export const modulesMap: { [key: string]: string } = {
   // '_': 'index',
   // ezequiel
-  ezequiel: "embedded-links",
+  ezequiel: "links",
   "cv.ezequiel": "cv",
   "wall.ezequiel": "plain-page",
   "mission-pomodoros.ezequiel": "embedded-gsheets",
@@ -66,7 +66,7 @@ rewriteIndependentHostWishSharedHost.test = () => {
   assert(tf("ezequielschwartzman.org"), "ezequiel.localhost:3000");
   assert(tf("nickfeint.com"), "nick.localhost:3000");
   // Phase 2
-  assert(tf("walls.ezequielschwartzman.org"), "wall.ezequiel.localhost:3000");
+  assert(tf("wall.ezequielschwartzman.org"), "wall.ezequiel.localhost:3000");
 };
 
 export default function middleware(req: Request) {

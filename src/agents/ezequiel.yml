@@ -2,6 +2,29 @@ name: Ezequiel Schwartzman
 photo: /public/profiles/ezequiel.jpg
 background: /public/backgrounds/leaves.jpg
 navColor: '#202e2e'
+
+links:
+  title: Ezequiel Schwartzman
+  links:
+    -
+      text: Biography
+      href: https//bio.ezequielschwartzman.org
+    -
+      text: Work Experience
+      href: https://cv.ezequielschwartzman.org
+    -
+      text: Notes
+      href: https://notes.zequez.space
+    -
+      text: Wall
+      href: https//wall.ezequielschwartzman.org
+
+  iconLinks:
+    -
+      icon: github
+      href: https://github.com/zequez
+
+
 modules:
   -
     path: /
