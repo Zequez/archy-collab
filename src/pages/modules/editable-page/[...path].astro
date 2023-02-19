@@ -1,0 +1,39 @@
+---
+import EditorUrl from "@components/Editor/Editor?url";
+import { Store } from "@tomic/react";
+
+const NAMESPACE = "archy-collab";
+const domainParts = (Astro.params.path || "").split(".").reverse();
+const topDomain = domainParts[0];
+const subdomains = domainParts.slice(1);
+
+if (!topDomain) throw new Error("Must provide a path");
+
+const store = new Store({
+  serverUrl: "https://atomicdata.dev",
+});
+
+const resource = await store.fetchResourceFromServer(
+  `https://atomicdata.dev/${NAMESPACE}/${topDomain}`
+);
+
+const htmlDocument = resource.get(
+  "https://atomicdata.dev/property/html-document"
+) as string;
+
+const editorScript = `<script type="module" src="${EditorUrl}"></script>`;
+
+// const EditorFile = await import("@components/Editor/Editor");
+
+function injectEditorScriptToHtml(html: string) {
+  // We could parse the document, but we don't need yet.
+  const bodyEnd = html.lastIndexOf("</body>");
+  if (bodyEnd !== -1) {
+    return html.slice(0, bodyEnd) + editorScript + html.slice(bodyEnd);
+  } else {
+    return html + editorScript;
+  }
+}
+---
+
+<Fragment set:html={injectEditorScriptToHtml(htmlDocument)} />
