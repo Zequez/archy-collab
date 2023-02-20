@@ -3,9 +3,11 @@ import editorBootstrapperUrl from "@components/Editor/bootstrapper?url";
 import { Store } from "@tomic/react";
 
 const NAMESPACE = "archy-collab";
+const fullHost = Astro.params.path;
 const domainParts = (Astro.params.path || "").split(".").reverse();
 const topDomain = domainParts[0];
 const subdomains = domainParts.slice(1);
+const allDomains = domainParts.join(".");
 
 if (!topDomain) throw new Error("Must provide a path");
 
@@ -14,12 +16,12 @@ const store = new Store({
 });
 
 const resource = await store.fetchResourceFromServer(
-  `https://atomicdata.dev/${NAMESPACE}/${topDomain}`
+  `https://atomicdata.dev/${NAMESPACE}/${fullHost}`
 );
 
-const htmlDocument = resource.get(
-  "https://atomicdata.dev/property/html-document"
-) as string;
+const htmlDocument =
+  (resource.get("https://atomicdata.dev/property/html-document") as string) ||
+  "";
 
 const editorScript = `<script type="module" src="${editorBootstrapperUrl}"></script>`;
 

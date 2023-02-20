@@ -12,6 +12,8 @@ export const hostMap: { [key: string]: string } = {
 
 export const modulesMap: { [key: string]: string } = {
   // '_': 'index',
+  squares: "editable-page",
+  sandbox: "editable-page",
   eze: "editable-page",
   "potato.eze": "editable-page",
   // ezequiel

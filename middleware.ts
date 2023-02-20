@@ -16,6 +16,8 @@ export const config = {
   ],
 };
 
+const defaultModule = "editable-page";
+
 export default function middleware(req: Request) {
   const url = new URL(req.url);
 
@@ -25,7 +27,7 @@ export default function middleware(req: Request) {
   const agentHost = removeBaseSharedHost(
     rewriteIndependentHostWishSharedHost(hostname)
   );
-  const choosenModule = modulesMap[agentHost];
+  const choosenModule = modulesMap[agentHost] || defaultModule;
   if (!choosenModule) return responseNext();
   // if (!choosenModule) return responseRedirect(`http://${baseHost}`);
 
@@ -34,7 +36,9 @@ export default function middleware(req: Request) {
   if (!agent) return responseNext();
   // if (!agent) return responseRedirect(`http://${baseHost}`);
 
-  const newPath = `/modules/${choosenModule}/${agent}`;
+  const newPath = `/modules/${choosenModule}/${
+    agentHost === baseHost ? "_" : agentHost
+  }`;
 
   // This is needed otherwise the host lookup fails and the middleware crashes
   url.host = baseHost;
