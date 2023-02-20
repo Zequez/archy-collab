@@ -1,23 +1,32 @@
-import { createRoot } from "react-dom/client";
+import React from "react";
 import { useEffect, useState } from "react";
-import { Store } from "@tomic/react";
+import { Store, Resource, Agent } from "@tomic/react";
 import {
   removeBaseSharedHost,
   rewriteIndependentHostWishSharedHost,
 } from "@lib/host";
+import CommitButton from "./CommitButton";
 
 const NAMESPACE = "archy-collab";
 
+const atomicAgent = Agent.fromSecret("");
 const store = new Store({
   serverUrl: "https://atomicdata.dev",
+  agent: atomicAgent,
 });
 
 const agent = removeBaseSharedHost(
   rewriteIndependentHostWishSharedHost(document.location.host)
 );
 
+const properties = {
+  htmlDocument: "https://atomicdata.dev/property/html-document",
+};
+
 const Editor = (props: any) => {
+  const [resource, setResource] = useState<Resource | null>(null);
   const [loading, setLoading] = useState(false);
+  const [commitLoading, setCommitLoading] = useState(false);
   const [serverHtmlDocument, setServerHtmlDocument] = useState("");
   const [localHtmlDocument, setLocalHtmlDocument] = useState("");
   const [lastBlobUrl, setLastBlobUrl] = useState<string>("");
@@ -28,9 +37,12 @@ const Editor = (props: any) => {
         `https://atomicdata.dev/${NAMESPACE}/${agent}`
       );
 
-      const serverHtml = resource.get(
-        "https://atomicdata.dev/property/html-document"
-      ) as string;
+      setResource(resource);
+
+      const serverHtml = resource.get(properties.htmlDocument) as string;
+
+      store.addResources();
+
       setServerHtmlDocument(serverHtml);
       handleHtmlUpdate(serverHtml);
       setLoading(false);
@@ -47,7 +59,16 @@ const Editor = (props: any) => {
     setLastBlobUrl(blobUrl);
   }
 
-  console.log("Editor rendered!", props);
+  async function handleCommit() {
+    if (resource) {
+      setCommitLoading(true);
+      await resource.set(properties.htmlDocument, localHtmlDocument, store);
+      console.log("Resource set!", resource);
+      console.log("Save!", await resource.save(store));
+      document.location.reload();
+    }
+  }
+
   return (
     <div
       style={{
@@ -69,8 +90,36 @@ const Editor = (props: any) => {
             style={{ width: "50%", height: "100%", border: "none" }}
             src={lastBlobUrl}
           ></iframe>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              background: "#eee",
+              padding: "0 6px 6px 6px",
+              borderWidth: "0 1px",
+              borderStyle: "solid",
+              borderColor: "#aaa",
+            }}
+          >
+            <div style={{ flexGrow: 1 }}></div>
+            <CommitButton
+              enabled={
+                localHtmlDocument !== serverHtmlDocument && !commitLoading
+              }
+              onActivate={handleCommit}
+            />
+          </div>
           <textarea
-            style={{ width: "50%", height: "100%", display: "block" }}
+            style={{
+              width: "50%",
+              height: "100%",
+              display: "block",
+              padding: "12px",
+              resize: "none",
+              boxSizing: "border-box",
+              border: "none",
+              outline: "none",
+            }}
             value={localHtmlDocument}
             onChange={(ev) => handleHtmlUpdate(ev.target.value)}
           ></textarea>
@@ -80,42 +129,4 @@ const Editor = (props: any) => {
   );
 };
 
-const rootElement = document.createElement("div");
-const root = createRoot(rootElement);
-function loadOrShowEditor() {
-  if (!rootElement.isConnected) {
-    document.body.append(rootElement);
-    root.render(<Editor />);
-  } else {
-    rootElement.remove();
-  }
-}
-
-const CLICKS_TO_OPEN = 5;
-const MAX_TIME_BETWEEN_CLICKS = 1000;
-let timeout: NodeJS.Timeout;
-let clickCount = 0;
-
-function handleClick() {
-  if (clickCount >= CLICKS_TO_OPEN) {
-    return;
-  }
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    clickCount = 0;
-  }, MAX_TIME_BETWEEN_CLICKS);
-  clickCount += 1;
-  if (clickCount === CLICKS_TO_OPEN) {
-    console.log("SUCCESS!");
-    loadOrShowEditor();
-  } else {
-    console.log(
-      `${CLICKS_TO_OPEN - clickCount} Clicks away from opening the editor`
-    );
-  }
-}
-
-document.addEventListener("click", handleClick);
-document.addEventListener("touchstart", handleClick);
-
-export default Editor;
+export default React.memo(Editor);

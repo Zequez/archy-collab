@@ -1,0 +1,56 @@
+import { createRoot } from "react-dom/client";
+import Editor from "./Editor";
+
+const rootElement = document.createElement("div");
+const root = createRoot(rootElement);
+let LatestEditor = Editor;
+function loadOrShowEditor() {
+  if (!rootElement.isConnected) {
+    document.body.append(rootElement);
+    root.render(<LatestEditor />);
+  } else {
+    rootElement.remove();
+  }
+}
+
+function resetEditor() {
+  root.render(<LatestEditor />);
+}
+
+const CLICKS_TO_OPEN = 5;
+const MAX_TIME_BETWEEN_CLICKS = 1000;
+let timeout: NodeJS.Timeout;
+let clickCount = 0;
+
+function handleClick() {
+  if (clickCount >= CLICKS_TO_OPEN) {
+    return;
+  }
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    clickCount = 0;
+  }, MAX_TIME_BETWEEN_CLICKS);
+  clickCount += 1;
+  if (clickCount === CLICKS_TO_OPEN) {
+    console.log("SUCCESS!");
+    loadOrShowEditor();
+  } else {
+    console.log(
+      `${CLICKS_TO_OPEN - clickCount} Clicks away from opening the editor`
+    );
+  }
+}
+
+document.addEventListener("click", handleClick);
+document.addEventListener("touchstart", handleClick);
+
+if (import.meta.hot) {
+  console.log("HMR!");
+  import.meta.hot.accept("./Editor", (newEditor) => {
+    console.log("New Editor!", newEditor);
+    if (newEditor) {
+      LatestEditor = newEditor.default;
+      resetEditor();
+    }
+  });
+}

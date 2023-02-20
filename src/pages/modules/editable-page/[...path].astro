@@ -1,5 +1,5 @@
 ---
-import EditorUrl from "@components/Editor/Editor?url";
+import editorBootstrapperUrl from "@components/Editor/bootstrapper?url";
 import { Store } from "@tomic/react";
 
 const NAMESPACE = "archy-collab";
@@ -21,7 +21,7 @@ const htmlDocument = resource.get(
   "https://atomicdata.dev/property/html-document"
 ) as string;
 
-const editorScript = `<script type="module" src="${EditorUrl}"></script>`;
+const editorScript = `<script type="module" src="${editorBootstrapperUrl}"></script>`;
 
 // const EditorFile = await import("@components/Editor/Editor");
 
