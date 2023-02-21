@@ -23,7 +23,7 @@ const htmlDocument =
   (resource.get("https://atomicdata.dev/property/html-document") as string) ||
   "";
 
-const editorScript = `<script type="module" src="${editorBootstrapperUrl}"></script>`;
+const editorScript = `<script type="module" src="${editorBootstrapperUrl}" astroPath="${fullHost}"></script>`;
 
 // const EditorFile = await import("@components/Editor/Editor");
 

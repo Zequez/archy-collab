@@ -13,11 +13,14 @@ const store = new Store({
   serverUrl: "https://atomicdata.dev",
 });
 
-const subHost = removeBaseSharedHost(
-  rewriteIndependentHostWishSharedHost(document.location.host)
-);
+const astroPath =
+  document.querySelector("[astropath]")?.getAttribute("astropath") || "";
 
-const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${subHost}`;
+// const subHost = removeBaseSharedHost(
+//   rewriteIndependentHostWishSharedHost(document.location.host)
+// );
+
+const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${astroPath}`;
 
 const urls = {
   htmlDocument: "https://atomicdata.dev/property/html-document",
@@ -79,7 +82,7 @@ const Editor = (props: any) => {
             [urls.parent]: urls.archyCollab,
             [urls.htmlDocument]: "<h1>Initial website</h1>",
             [urls.isA]: [urls.noclass],
-            [urls.name]: subHost,
+            [urls.name]: astroPath,
           });
         }
 
