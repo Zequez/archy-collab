@@ -15,13 +15,37 @@ const store = new Store({
   agent: atomicAgent,
 });
 
-const agent = removeBaseSharedHost(
+const subHost = removeBaseSharedHost(
   rewriteIndependentHostWishSharedHost(document.location.host)
 );
 
-const properties = {
+const urls = {
   htmlDocument: "https://atomicdata.dev/property/html-document",
+  error: "https://atomicdata.dev/classes/Error",
+  isA: "https://atomicdata.dev/properties/isA",
+  noclass: "https://atomicdata.dev/noclass",
+  name: "https://atomicdata.dev/properties/name",
+  parent: "https://atomicdata.dev/properties/parent",
+  archyCollab: "https://atomicdata.dev/drive/jn6aczrpfg",
 };
+
+function isError(resource: Resource): boolean {
+  return (resource.get(urls.isA) as string[]).includes(urls.error);
+}
+
+async function createNewResource(
+  subjectUrl: string,
+  propVals: { [x: string]: string | string[] }
+) {
+  const resource = new Resource(subjectUrl, true);
+  await Promise.all([
+    ...Object.entries(propVals).map(([key, val]) =>
+      resource.set(key, val, store)
+    ),
+  ]);
+  await resource.save(store);
+  return resource;
+}
 
 const Editor = (props: any) => {
   const [resource, setResource] = useState<Resource | null>(null);
@@ -31,15 +55,26 @@ const Editor = (props: any) => {
   const [localHtmlDocument, setLocalHtmlDocument] = useState("");
   const [lastBlobUrl, setLastBlobUrl] = useState<string>("");
 
+  const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${subHost}`;
+
   useEffect(() => {
     (async () => {
-      const resource = await store.fetchResourceFromServer(
-        `https://atomicdata.dev/${NAMESPACE}/${agent}`
-      );
+      let resource = await store.fetchResourceFromServer(resourceUrl);
+
+      const resourceDoesNotExist = isError(resource);
+
+      if (resourceDoesNotExist) {
+        resource = await createNewResource(resourceUrl, {
+          [urls.parent]: urls.archyCollab,
+          [urls.htmlDocument]: "<h1>Initial website</h1>",
+          [urls.isA]: [urls.noclass],
+          [urls.name]: subHost,
+        });
+      }
 
       setResource(resource);
 
-      const serverHtml = resource.get(properties.htmlDocument) as string;
+      const serverHtml = resource.get(urls.htmlDocument) as string;
 
       store.addResources();
 
@@ -62,7 +97,7 @@ const Editor = (props: any) => {
   async function handleCommit() {
     if (resource) {
       setCommitLoading(true);
-      await resource.set(properties.htmlDocument, localHtmlDocument, store);
+      await resource.set(urls.htmlDocument, localHtmlDocument, store);
       console.log("Resource set!", resource);
       console.log("Save!", await resource.save(store));
       document.location.reload();
