@@ -9,15 +9,15 @@ import CommitButton from "./CommitButton";
 
 const NAMESPACE = "archy-collab";
 
-const atomicAgent = Agent.fromSecret("");
 const store = new Store({
   serverUrl: "https://atomicdata.dev",
-  agent: atomicAgent,
 });
 
 const subHost = removeBaseSharedHost(
   rewriteIndependentHostWishSharedHost(document.location.host)
 );
+
+const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${subHost}`;
 
 const urls = {
   htmlDocument: "https://atomicdata.dev/property/html-document",
@@ -48,6 +48,7 @@ async function createNewResource(
 }
 
 const Editor = (props: any) => {
+  const [agent, setAgent] = useState<Agent | null>(null);
   const [resource, setResource] = useState<Resource | null>(null);
   const [loading, setLoading] = useState(false);
   const [commitLoading, setCommitLoading] = useState(false);
@@ -55,34 +56,45 @@ const Editor = (props: any) => {
   const [localHtmlDocument, setLocalHtmlDocument] = useState("");
   const [lastBlobUrl, setLastBlobUrl] = useState<string>("");
 
-  const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${subHost}`;
+  useEffect(() => {
+    const agentSecret =
+      localStorage.getItem("agentSecret") || prompt("Secret key?");
+    if (agentSecret) {
+      const newAgent = Agent.fromSecret(agentSecret);
+      localStorage.setItem("agentSecret", agentSecret);
+      store.setAgent(newAgent);
+      setAgent(newAgent);
+    }
+  }, []);
 
   useEffect(() => {
-    (async () => {
-      let resource = await store.fetchResourceFromServer(resourceUrl);
+    if (agent) {
+      (async () => {
+        let resource = await store.fetchResourceFromServer(resourceUrl);
 
-      const resourceDoesNotExist = isError(resource);
+        const resourceDoesNotExist = isError(resource);
 
-      if (resourceDoesNotExist) {
-        resource = await createNewResource(resourceUrl, {
-          [urls.parent]: urls.archyCollab,
-          [urls.htmlDocument]: "<h1>Initial website</h1>",
-          [urls.isA]: [urls.noclass],
-          [urls.name]: subHost,
-        });
-      }
+        if (resourceDoesNotExist) {
+          resource = await createNewResource(resourceUrl, {
+            [urls.parent]: urls.archyCollab,
+            [urls.htmlDocument]: "<h1>Initial website</h1>",
+            [urls.isA]: [urls.noclass],
+            [urls.name]: subHost,
+          });
+        }
 
-      setResource(resource);
+        setResource(resource);
 
-      const serverHtml = resource.get(urls.htmlDocument) as string;
+        const serverHtml = resource.get(urls.htmlDocument) as string;
 
-      store.addResources();
+        store.addResources();
 
-      setServerHtmlDocument(serverHtml);
-      handleHtmlUpdate(serverHtml);
-      setLoading(false);
-    })();
-  }, []);
+        setServerHtmlDocument(serverHtml);
+        handleHtmlUpdate(serverHtml);
+        setLoading(false);
+      })();
+    }
+  }, [agent]);
 
   function handleHtmlUpdate(newHtml: string) {
     setLocalHtmlDocument(newHtml);

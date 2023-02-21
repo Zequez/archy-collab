@@ -1,7 +1,6 @@
 import {
   baseHost,
   removeBaseSharedHost,
-  modulesMap,
   rewriteIndependentHostWishSharedHost,
 } from "./src/lib/host";
 
@@ -27,16 +26,13 @@ export default function middleware(req: Request) {
   const agentHost = removeBaseSharedHost(
     rewriteIndependentHostWishSharedHost(hostname)
   );
-  const choosenModule = modulesMap[agentHost] || defaultModule;
-  if (!choosenModule) return responseNext();
-  // if (!choosenModule) return responseRedirect(`http://${baseHost}`);
 
   const agentHostParts = agentHost.split(".");
   const agent = agentHostParts.slice(-1);
   if (!agent) return responseNext();
   // if (!agent) return responseRedirect(`http://${baseHost}`);
 
-  const newPath = `/modules/${choosenModule}/${
+  const newPath = `/modules/editable-page/${
     agentHost === baseHost ? "_" : agentHost
   }`;
 

@@ -10,22 +10,22 @@ export const hostMap: { [key: string]: string } = {
   "eltemplo.com": "templo.nach",
 };
 
-export const modulesMap: { [key: string]: string } = {
-  // '_': 'index',
-  squares: "editable-page",
-  sandbox: "editable-page",
-  eze: "editable-page",
-  "potato.eze": "editable-page",
-  // ezequiel
-  ezequiel: "links",
-  "cv.ezequiel": "cv",
-  "wall.ezequiel": "plain-page",
-  "mission-pomodoros.ezequiel": "embedded-gsheets",
-  // nick
-  nick: "embedded-links",
-  "songs.nick": "songs",
-  "templo.nach": "links",
-};
+// export const modulesMap: { [key: string]: string } = {
+//   // '_': 'index',
+//   squares: "editable-page",
+//   sandbox: "editable-page",
+//   eze: "editable-page",
+//   "potato.eze": "editable-page",
+//   // ezequiel
+//   ezequiel: "links",
+//   "cv.ezequiel": "cv",
+//   "wall.ezequiel": "plain-page",
+//   "mission-pomodoros.ezequiel": "embedded-gsheets",
+//   // nick
+//   nick: "embedded-links",
+//   "songs.nick": "songs",
+//   "templo.nach": "links",
+// };
 
 export const baseHost =
   process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
