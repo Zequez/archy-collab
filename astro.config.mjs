@@ -30,5 +30,8 @@ export default defineConfig({
   adapter: vercel(),
   vite: {
     plugins: [yaml()],
+    build: {
+      assetsInlineLimit: 0,
+    },
   },
 });
