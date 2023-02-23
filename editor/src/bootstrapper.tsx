@@ -8,14 +8,25 @@ let LatestEditor = Editor;
 function loadOrShowEditor() {
   if (!rootElement.isConnected) {
     document.body.append(rootElement);
-    root.render(<LatestEditor />);
+    renderEditor();
   } else {
     rootElement.remove();
   }
 }
 
 function resetEditor() {
-  root.render(<LatestEditor />);
+  renderEditor();
+}
+
+function renderEditor() {
+  const astroPath =
+    document.querySelector("[astropath]")?.getAttribute("astropath") || "";
+  root.render(
+    <LatestEditor
+      onClose={() => rootElement.remove()}
+      documentPath={astroPath}
+    />
+  );
 }
 
 const CLICKS_TO_OPEN = 5;

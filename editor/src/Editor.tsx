@@ -1,7 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Store, Resource, Agent } from "@tomic/react";
-import CommitButton from "./CommitButton";
+import CodeMirror from "@uiw/react-codemirror";
+import { html as htmlLang } from "@codemirror/lang-html";
+
+import StyledButton from "./StyledButton";
 
 const NAMESPACE = "archy-collab";
 
@@ -9,14 +12,9 @@ const store = new Store({
   serverUrl: "https://atomicdata.dev",
 });
 
-const astroPath =
-  document.querySelector("[astropath]")?.getAttribute("astropath") || "";
-
 // const subHost = removeBaseSharedHost(
 //   rewriteIndependentHostWishSharedHost(document.location.host)
 // );
-
-const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${astroPath}`;
 
 const urls = {
   htmlDocument: "https://atomicdata.dev/property/html-document",
@@ -46,7 +44,14 @@ async function createNewResource(
   return resource;
 }
 
-const Editor = (props: any) => {
+type EditorProps = {
+  onClose: () => void;
+  documentPath: string;
+};
+
+const Editor = ({ onClose, documentPath }: EditorProps) => {
+  const resourceUrl = `https://atomicdata.dev/${NAMESPACE}/${documentPath}`;
+
   const [agent, setAgent] = useState<Agent | null>(null);
   const [resource, setResource] = useState<Resource | null>(null);
   const [loading, setLoading] = useState(false);
@@ -78,7 +83,7 @@ const Editor = (props: any) => {
             [urls.parent]: urls.archyCollab,
             [urls.htmlDocument]: "<h1>Initial website</h1>",
             [urls.isA]: [urls.noclass],
-            [urls.name]: astroPath,
+            [urls.name]: documentPath,
           });
         }
 
@@ -111,7 +116,7 @@ const Editor = (props: any) => {
       await resource.set(urls.htmlDocument, localHtmlDocument, store);
       console.log("Resource set!", resource);
       console.log("Save!", await resource.save(store));
-      document.location.reload();
+      setCommitLoading(false);
     }
   }
 
@@ -148,27 +153,40 @@ const Editor = (props: any) => {
             }}
           >
             <div style={{ flexGrow: 1 }}></div>
-            <CommitButton
+            <StyledButton
+              hue={122}
               enabled={
                 localHtmlDocument !== serverHtmlDocument && !commitLoading
               }
               onActivate={handleCommit}
+              style={{ marginBottom: "8px" }}
+            >
+              Commit
+            </StyledButton>
+            <StyledButton
+              hue={0}
+              sat={20}
+              onActivate={() => onClose()}
+              enabled={true}
+            >
+              Close
+            </StyledButton>
+          </div>
+          <div style={{ width: "50%", height: "100%", overflow: "auto" }}>
+            <CodeMirror
+              extensions={[htmlLang()]}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "block",
+                boxSizing: "border-box",
+                border: "none",
+                outline: "none",
+              }}
+              value={localHtmlDocument}
+              onChange={(val) => handleHtmlUpdate(val)}
             />
           </div>
-          <textarea
-            style={{
-              width: "50%",
-              height: "100%",
-              display: "block",
-              padding: "12px",
-              resize: "none",
-              boxSizing: "border-box",
-              border: "none",
-              outline: "none",
-            }}
-            value={localHtmlDocument}
-            onChange={(ev) => handleHtmlUpdate(ev.target.value)}
-          ></textarea>
         </>
       )}
     </div>
