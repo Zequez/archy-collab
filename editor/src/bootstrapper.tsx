@@ -42,11 +42,11 @@ function handleClick() {
   }
 }
 
-document.addEventListener("keydown", (ev) => {
-  if (ev.shiftKey) {
-    handleClick();
-  }
-});
+// document.addEventListener("keydown", (ev) => {
+//   if (ev.shiftKey) {
+//     handleClick();
+//   }
+// });
 document.addEventListener("click", handleClick);
 document.addEventListener("touchstart", handleClick);
 
