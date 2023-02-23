@@ -2,4 +2,5 @@
 
 This is part of an experiment to build the web on archiarchy.
 
-https://ezequiel.archy.site
+https://eze.archy.site
+
