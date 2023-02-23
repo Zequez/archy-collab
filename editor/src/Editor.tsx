@@ -130,6 +130,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
         right: 0,
         left: 0,
         background: "white",
+        zIndex: 9999,
       }}
     >
       {loading ? (
