@@ -137,7 +137,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
       ) : (
         <>
           <iframe
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-popups"
             style={{ width: "50%", height: "100%", border: "none" }}
             src={lastBlobUrl}
           ></iframe>
