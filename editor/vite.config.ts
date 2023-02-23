@@ -9,10 +9,17 @@ export default defineConfig({
   },
   build: {
     outDir: resolve(__dirname, "./dist"),
-    lib: {
-      entry: resolve(__dirname, "src/bootstrapper.tsx"),
-      name: "Editor",
-      fileName: "editor",
+    // lib: {
+    //   entry: resolve(__dirname, "src/bootstrapper.tsx"),
+    //   name: "Editor",
+    //   fileName: "editor",
+    // },
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
     },
   },
 });
