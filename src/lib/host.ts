@@ -5,7 +5,7 @@ export const hostMap: { [key: string]: string } = {
   // 'archy.site': '',
   // 'localhost:3000': '',
   "ezequielschwartzman.local:3000": "ezequiel",
-  "ezequielschwartzman.org": "ezequiel",
+  "ezequielschwartzman.org": "eze",
   "nickfeint.com": "nick",
   "eltemplo.com": "templo.nach",
 };
