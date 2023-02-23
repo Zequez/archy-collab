@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     port: 3917,
   },
+  define: {
+    "process.env": process.env,
+  },
   build: {
     outDir: resolve(__dirname, "./dist"),
     // lib: {
