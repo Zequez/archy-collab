@@ -1,3 +1,4 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
 import Editor from "./Editor";
 
@@ -18,8 +19,8 @@ function resetEditor() {
 }
 
 const CLICKS_TO_OPEN = 5;
-const MAX_TIME_BETWEEN_CLICKS = 1000;
-let timeout: NodeJS.Timeout;
+const MAX_TIME_BETWEEN_CLICKS = 1500;
+let timeout: number;
 let clickCount = 0;
 
 function handleClick() {
@@ -41,6 +42,11 @@ function handleClick() {
   }
 }
 
+document.addEventListener("keydown", (ev) => {
+  if (ev.shiftKey) {
+    handleClick();
+  }
+});
 document.addEventListener("click", handleClick);
 document.addEventListener("touchstart", handleClick);
 

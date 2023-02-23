@@ -23,3 +23,5 @@ public/.cache/*
 .vercel
 
 elm-stuff
+
+editor/dist/

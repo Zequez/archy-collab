@@ -1,3 +1,5 @@
+import React from "react";
+
 type CommitButtonProps = {
   onActivate: React.MouseEventHandler<HTMLButtonElement>;
   enabled: boolean;

@@ -1,9 +1,0 @@
-name: Your Name
-photo: '/public/profiles/default.png'
-background: /public/backgrounds/leaves.jpg
-navColor: '#333'
-modules:
-  -
-    path: /
-    name: Your Name
-    value: You can make this your personal website.

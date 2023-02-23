@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/",
+    "sourceMap": false,
+    "strict": true,
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext",
+    "jsxImportSource": "react",
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["./*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@lib/*": ["src/lib/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": [
+    "src/bootstrapper.tsx"
+  ],
+  "ts-node": {
+    "esm": true
+  },
+}

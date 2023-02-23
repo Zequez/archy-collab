@@ -1,10 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Store, Resource, Agent } from "@tomic/react";
-import {
-  removeBaseSharedHost,
-  rewriteIndependentHostWishSharedHost,
-} from "@lib/host";
 import CommitButton from "./CommitButton";
 
 const NAMESPACE = "archy-collab";

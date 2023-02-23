@@ -11,7 +11,7 @@ export const config = {
      * 1. thes ones mentioned and...
      * 2. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!Users|assets|public|@id|@vite|@fs|src|agents|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
+    "/((?!Users|editor|assets|public|@id|@vite|@fs|src|agents|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
   ],
 };
 
@@ -32,9 +32,7 @@ export default function middleware(req: Request) {
   if (!agent) return responseNext();
   // if (!agent) return responseRedirect(`http://${baseHost}`);
 
-  const newPath = `/modules/editable-page/${
-    agentHost === baseHost ? "_" : agentHost
-  }`;
+  const newPath = `/${agentHost === baseHost ? "_" : agentHost}`;
 
   // This is needed otherwise the host lookup fails and the middleware crashes
   url.host = baseHost;
