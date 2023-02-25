@@ -23,16 +23,17 @@ export default function middleware(req: Request) {
   const hostname = req.headers.get("host");
   if (!hostname) return responseNext();
 
-  const agentHost = removeBaseSharedHost(
-    rewriteIndependentHostWishSharedHost(hostname)
-  );
+  const agentHost =
+    removeBaseSharedHost(rewriteIndependentHostWishSharedHost(hostname)) || "_";
 
-  const agentHostParts = agentHost.split(".");
-  const agent = agentHostParts.slice(-1);
-  if (!agent) return responseNext();
+  // console.log("AGENT HOST!", agentHost);
+
+  // const agentHostParts = agentHost.split(".");
+  // const agent = agentHostParts.slice(-1);
+  // if (!agent) return responseNext();
   // if (!agent) return responseRedirect(`http://${baseHost}`);
 
-  const newPath = `/${agentHost === baseHost ? "_" : agentHost}`;
+  const newPath = `/${agentHost}`;
 
   // This is needed otherwise the host lookup fails and the middleware crashes
   url.host = baseHost;

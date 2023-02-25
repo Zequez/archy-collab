@@ -2,9 +2,9 @@ const DEV_HOST = "localhost:3000";
 const PROD_HOST = "archy.site";
 
 export const hostMap: { [key: string]: string } = {
-  // 'archy.site': '',
-  // 'localhost:3000': '',
-  "ezequielschwartzman.local:3000": "ezequiel",
+  // 'archy.site': '_',
+  // 'localhost:3000': '_',
+  "ezequielschwartzman.local:3000": "eze",
   "ezequielschwartzman.org": "eze",
   "nickfeint.com": "nick",
   "eltemplo.com": "templo.nach",
@@ -33,7 +33,10 @@ export const baseHost =
     : DEV_HOST;
 
 export function removeBaseSharedHost(fullHostname: string): string {
-  return fullHostname.replace(new RegExp(`.${baseHost}$`), "");
+  return fullHostname.replace(
+    new RegExp(`\\.?${baseHost.replace(".", "\\.")}$`),
+    ""
+  );
 }
 
 // wall.ezequielschwartzman.org => wall.ezequiel.archy.site | wall.ezequiel.localhost:3000
@@ -55,11 +58,12 @@ rewriteIndependentHostWishSharedHost.test = () => {
   console.info("rewriteIndependentHostWishSharedHost");
   let tf = rewriteIndependentHostWishSharedHost;
   // Phase 1
-  assert(tf("ezequielschwartzman.local:3000"), "ezequiel.localhost:3000");
-  assert(tf("ezequielschwartzman.org"), "ezequiel.localhost:3000");
+  assert(tf("archy.site"), "archy.site");
+  assert(tf("ezequielschwartzman.local:3000"), "eze.localhost:3000");
+  assert(tf("ezequielschwartzman.org"), "eze.localhost:3000");
   assert(tf("nickfeint.com"), "nick.localhost:3000");
   // Phase 2
-  assert(tf("wall.ezequielschwartzman.org"), "wall.ezequiel.localhost:3000");
+  assert(tf("wall.ezequielschwartzman.org"), "wall.eze.localhost:3000");
 };
 
 // ████████╗███████╗███████╗████████╗███████╗
