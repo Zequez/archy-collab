@@ -5,11 +5,12 @@
     <meta charset="UTF-8" />
   </head>
   <body>
-    <script type="module" src="./src/bootstrapper.tsx" astroPath="eze"></script>
+    <script type="module" src="./src/bootstrapper.tsx" astroPath></script>
     <script>
-      document
-        .querySelector("[astropath]")
-        ?.setAttribute("astropath", location.pathname.slice(1));
+      const domain = location.search.slice(1) || "_";
+      const path = location.pathname.slice(1);
+      const joined = path ? `${domain}/${path}` : domain;
+      document.querySelector("[astropath]")?.setAttribute("astropath", joined);
     </script>
   </body>
 </html>

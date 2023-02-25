@@ -173,7 +173,14 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
               Close
             </StyledButton>
           </div>
-          <div style={{ width: "50%", height: "100%", overflow: "auto" }}>
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              overflow: "auto",
+              color: "black",
+            }}
+          >
             <CodeMirror
               extensions={[htmlLang()]}
               style={{
