@@ -61,6 +61,10 @@ function handleClick() {
 document.addEventListener("click", handleClick);
 document.addEventListener("touchstart", handleClick);
 
+(window as any).openEditor = () => {
+  loadOrShowEditor();
+};
+
 if (import.meta.hot) {
   console.log("HMR!");
   import.meta.hot.accept("./Editor", (newEditor) => {

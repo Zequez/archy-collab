@@ -7,6 +7,8 @@ import { html as htmlLang } from "@codemirror/lang-html";
 import StyledButton from "./StyledButton";
 
 const NAMESPACE = "archy-collab";
+const ANONYMOUS_PUBLIC_KEY =
+  "eyJjbGllbnQiOnt9LCJzdWJqZWN0IjoiaHR0cHM6Ly9hdG9taWNkYXRhLmRldi9hZ2VudHMvQ0Nla2xVNUo0Y3h5anR2dmJTYU1sOEhtY2JCY2lRbElJTEpXcVRGQUxmST0iLCJwcml2YXRlS2V5Ijoid2xqa29LRlRRK1A4RUZPNHNibXlhOXVSVFd4NE44WkluMmxaSHlhOStJTT0iLCJwdWJsaWNLZXkiOiJDQ2VrbFU1SjRjeHlqdHZ2YlNhTWw4SG1jYkJjaVFsSUlMSldxVEZBTGZJPSJ9";
 
 const store = new Store({
   serverUrl: "https://atomicdata.dev",
@@ -24,6 +26,8 @@ const urls = {
   name: "https://atomicdata.dev/properties/name",
   parent: "https://atomicdata.dev/properties/parent",
   archyCollab: "https://atomicdata.dev/drive/jn6aczrpfg",
+  invitationFolder: "https://atomicdata.dev/Folder/xdi4s7bzo9",
+  invitations: "https://atomicdata.dev/invite/4n1xa3ygbx9",
 };
 
 function isError(resource: Resource): boolean {
@@ -62,12 +66,18 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
 
   useEffect(() => {
     const agentSecret =
-      localStorage.getItem("agentSecret") || prompt("Secret key?");
+      localStorage.getItem("agentSecret") ||
+      prompt(
+        "Secret key? If none is supplied a public anonymous key will be used; anyone will also be able to edit this page."
+      ) ||
+      ANONYMOUS_PUBLIC_KEY;
     if (agentSecret) {
       const newAgent = Agent.fromSecret(agentSecret);
       localStorage.setItem("agentSecret", agentSecret);
       store.setAgent(newAgent);
       setAgent(newAgent);
+    } else {
+      onClose();
     }
   }, []);
 
@@ -80,7 +90,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
 
         if (resourceDoesNotExist) {
           resource = await createNewResource(resourceUrl, {
-            [urls.parent]: urls.archyCollab,
+            [urls.parent]: urls.invitationFolder,
             [urls.htmlDocument]: "<h1>Initial website</h1>",
             [urls.isA]: [urls.noclass],
             [urls.name]: documentPath,
