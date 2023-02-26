@@ -35,9 +35,7 @@ export default function middleware(req: Request) {
   // console.log("URL PATH!", urlPath);
 
   // This is needed otherwise the host lookup fails when receiving requests from other hostnames
-  url.host = process.env.VERCEL_URL
-    ? new URL(process.env.VERCEL_URL).host
-    : "localhost";
+  url.host = process.env.VERCEL_URL ? "archy.site" : "localhost";
   url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
   return responseRewrite(url);
 }

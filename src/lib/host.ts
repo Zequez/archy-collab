@@ -1,7 +1,11 @@
 const DEV_HOST = "localhost:3000";
 const PROD_HOST = "archy.site";
 
-const platformHosts = ["localhost:3000", "archy.site", "archy.site:3000"];
+const platformHosts = [
+  "localhost:3000",
+  "archy.site",
+  "archy-collab-zequez.vercel.app",
+];
 
 export const hostMap: { [key: string]: string } = {
   "ezequielschwartzman.local:3000": "eze",
