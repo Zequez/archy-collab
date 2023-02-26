@@ -7,7 +7,7 @@ export const config = {
      * 1. thes ones mentioned and...
      * 2. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!Users|editor|assets|public|@id|@vite|@fs|src|agents|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
+    "/((?!Users|editor|assets|sites|public|@id|@vite|@fs|src|agents|node_modules|favicon.svg|bg.jpg|profile.jpg|[\\w-]+\\.\\w+).*)",
   ],
 };
 
@@ -35,6 +35,7 @@ export default function middleware(req: Request) {
   // This is needed otherwise the host lookup fails when receiving requests from other hostnames
   url.host = process.env.VERCEL_URL ? "archy.site" : "localhost";
   // url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
+  url.pathname = `/sites/${url.pathname}`;
   url.searchParams.set("host", address);
   url.searchParams.set("requestedHost", hostname);
   return responseRewrite(url);
