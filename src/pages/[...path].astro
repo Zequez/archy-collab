@@ -46,4 +46,11 @@ function injectEditorScriptToHtml(html: string) {
 }
 ---
 
+<pre>
+  {JSON.stringify(Astro.url)}
+</pre>
+
+<pre>
+  {JSON.stringify(Astro.params.path)}
+</pre>
 <Fragment set:html={injectEditorScriptToHtml(htmlDocument)} />

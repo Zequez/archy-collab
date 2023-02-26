@@ -36,6 +36,7 @@ export default function middleware(req: Request) {
   url.host = process.env.VERCEL_URL ? "archy.site" : "localhost";
   // url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
   url.searchParams.set("host", address);
+  url.searchParams.set("requestedHost", hostname);
   return responseRewrite(url);
 }
 
