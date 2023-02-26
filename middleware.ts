@@ -11,8 +11,6 @@ export const config = {
   ],
 };
 
-const defaultModule = "editable-page";
-
 const createError = (msg: string, status: number) => {
   const e = new Error(msg);
   (e as any).status = status;
@@ -36,8 +34,8 @@ export default function middleware(req: Request) {
 
   // This is needed otherwise the host lookup fails when receiving requests from other hostnames
   url.host = process.env.VERCEL_URL ? "archy.site" : "localhost";
-  url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
-  url.search = hostname + "&&&" + address + "&&&" + url.pathname;
+  // url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
+  url.searchParams.set("host", address);
   return responseRewrite(url);
 }
 

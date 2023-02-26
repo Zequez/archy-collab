@@ -58,7 +58,7 @@ export const extractAddress = (requestedHostname: string): string | null => {
       if (subdomains) {
         return subdomains;
       } else {
-        return "MMM";
+        return "_";
       }
     }
   }

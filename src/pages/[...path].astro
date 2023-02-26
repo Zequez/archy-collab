@@ -3,8 +3,10 @@ import editorBootstrapperUrl from "@@/editor/dist/assets/index.js?url";
 import { Store } from "@tomic/react";
 
 const NAMESPACE = "archy-collab";
-const fullHost = Astro.params.path || "";
-console.log("FULL HOST", fullHost);
+const pagePath = Astro.params.path || "";
+const domain = Astro.url.searchParams.get("host");
+console.log("Domain on search params!", domain);
+// console.log("FULL HOST", fullHost);
 // const pathsNames = fullHost.split('/')
 // const domain = fullHost[0];
 // const path = fullHost.slice(1);
@@ -18,6 +20,8 @@ console.log("FULL HOST", fullHost);
 
 // console.log(Astro.url.pathname);
 // if (!topDomain) throw new Error("Must provide a path");
+
+const fullHost = pagePath ? `${domain}/${pagePath}` : domain;
 
 const store = new Store({
   serverUrl: "https://atomicdata.dev",
