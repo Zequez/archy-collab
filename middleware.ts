@@ -19,6 +19,7 @@ const createError = (msg: string, status: number) => {
 
 export default function middleware(req: Request) {
   const url = new URL(req.url);
+  if (url.searchParams.get("host")) return responseNext();
 
   const hostname = req.headers.get("host");
   if (!hostname) throw createError(`No host on header`, 400);
@@ -65,11 +66,11 @@ function responseRewrite(url: string | URL) {
   return new Response(null, { headers });
 }
 
-// function responseNext() {
-//   const headers = new Headers();
-//   headers.set("x-middleware-next", "1");
-//   new Response(null, { headers });
-// }
+function responseNext() {
+  const headers = new Headers();
+  headers.set("x-middleware-next", "1");
+  new Response(null, { headers });
+}
 
 // function responseRedirect(url: string) {
 //   const headers = new Headers();
