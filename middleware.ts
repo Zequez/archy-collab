@@ -1,8 +1,4 @@
-import {
-  baseHost,
-  removeBaseSharedHost,
-  rewriteIndependentHostWishSharedHost,
-} from "./src/lib/host";
+import { extractAddress } from "./src/lib/host";
 
 export const config = {
   matcher: [
@@ -17,28 +13,30 @@ export const config = {
 
 const defaultModule = "editable-page";
 
+const createError = (msg: string, status: number) => {
+  const e = new Error(msg);
+  (e as any).status = status;
+  return e;
+};
+
 export default function middleware(req: Request) {
   const url = new URL(req.url);
 
   const hostname = req.headers.get("host");
-  if (!hostname) return responseNext();
+  if (!hostname) throw createError(`No host on header`, 400);
 
-  const agentHost =
-    removeBaseSharedHost(rewriteIndependentHostWishSharedHost(hostname)) || "_";
+  const address = extractAddress(hostname);
+  if (!address) throw createError(`Hostname not registered ${hostname}`, 400);
 
-  // console.log("AGENT HOST!", agentHost);
+  const urlPath = url.pathname;
 
-  // const agentHostParts = agentHost.split(".");
-  // const agent = agentHostParts.slice(-1);
-  // if (!agent) return responseNext();
-  // if (!agent) return responseRedirect(`http://${baseHost}`);
+  // console.log("Resolved address", address);
+  // console.log("URL HOST!", url.host);
+  // console.log("URL PATH!", urlPath);
 
-  const newPath = `/${agentHost}`;
-
-  // This is needed otherwise the host lookup fails and the middleware crashes
-  url.host = baseHost;
-
-  url.pathname = newPath;
+  // This is needed otherwise the host lookup fails when receiving requests from other hostnames
+  url.host = "localhost";
+  url.pathname = urlPath === "/" ? `/${address}` : `/${address}${urlPath}`;
   return responseRewrite(url);
 }
 
@@ -66,21 +64,21 @@ function responseRewrite(url: string | URL) {
   return new Response(null, { headers });
 }
 
-function responseNext() {
-  const headers = new Headers();
-  headers.set("x-middleware-next", "1");
-  new Response(null, { headers });
-}
+// function responseNext() {
+//   const headers = new Headers();
+//   headers.set("x-middleware-next", "1");
+//   new Response(null, { headers });
+// }
 
-function responseRedirect(url: string) {
-  const headers = new Headers();
-  headers.set("Location", validateURL(url));
-  return new Response(null, { headers });
-}
+// function responseRedirect(url: string) {
+//   const headers = new Headers();
+//   headers.set("Location", validateURL(url));
+//   return new Response(null, { headers });
+// }
 
-(async () => {
-  if (process.env.NODE_ENV !== "production") {
-    console.info("\x1b[42m\x1b[30m[TEST] Middleware\x1b[0m");
-    rewriteIndependentHostWishSharedHost.test();
-  }
-})();
+// (async () => {
+//   if (process.env.NODE_ENV !== "production") {
+//     console.info("\x1b[42m\x1b[30m[TEST] Middleware\x1b[0m");
+//     rewriteIndependentHostWishSharedHost.test();
+//   }
+// })();
