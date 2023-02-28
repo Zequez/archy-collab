@@ -153,7 +153,6 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
     if (resource) {
       setCommitLoading(true);
       await resource.set(urls.htmlDocument, localHtmlDocument, store);
-      console.log("Resource set!", resource);
       console.log("Save!", await resource.save(store));
       setCommitLoading(false);
     }
@@ -179,15 +178,12 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
 
   const [isResizing, setIsResizing] = useState(false);
   function handleResizerStart() {
-    console.log("Start resizing");
     setIsResizing(true);
   }
   function handleResizerEnd() {
-    console.log("End resizing");
     setIsResizing(false);
   }
   function handleResizerDrag(ev: MouseEvent) {
-    console.log("Resizing drag", isResizing);
     if (isResizing) {
       const parentWidth = window.document.body.clientWidth ?? 0;
       const xPosition = ev.clientX;
