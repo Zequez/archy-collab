@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Store, Resource, Agent } from "@tomic/react";
 import CodeMirror from "@uiw/react-codemirror";
 import { html as htmlLang } from "@codemirror/lang-html";
@@ -17,6 +17,20 @@ const store = new Store({
 // const subHost = removeBaseSharedHost(
 //   rewriteIndependentHostWishSharedHost(document.location.host)
 // );
+
+const initialWebsite = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Website title</title>
+  </head>
+  <body>
+    <h1>Fresh website</h1>
+  </body>
+</html>
+`;
 
 const urls = {
   htmlDocument: "https://atomicdata.dev/property/html-document",
@@ -62,6 +76,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   const [commitLoading, setCommitLoading] = useState(false);
   const [serverHtmlDocument, setServerHtmlDocument] = useState("");
   const [localHtmlDocument, setLocalHtmlDocument] = useState("");
+  const [previewHtmlDocument, setPreviewHtmlDocument] = useState("");
   const [lastBlobUrl, setLastBlobUrl] = useState<string>("");
 
   useEffect(() => {
@@ -91,7 +106,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
         if (resourceDoesNotExist) {
           resource = await createNewResource(resourceUrl, {
             [urls.parent]: urls.invitationFolder,
-            [urls.htmlDocument]: "<h1>Initial website</h1>",
+            [urls.htmlDocument]: initialWebsite,
             [urls.isA]: [urls.noclass],
             [urls.name]: documentPath,
           });
@@ -104,20 +119,33 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
         store.addResources();
 
         setServerHtmlDocument(serverHtml);
-        handleHtmlUpdate(serverHtml);
+        const locallyStoredHtml = window.localStorage.getItem(documentPath);
+        setLocalHtmlDocument(locallyStoredHtml || serverHtml);
+        setPreviewHtmlDocument(locallyStoredHtml || serverHtml);
+        setBlobFromHtml(locallyStoredHtml || serverHtml);
         setLoading(false);
       })();
     }
   }, [agent]);
 
+  useEffect(() => {
+    function handleKeyDown(ev: KeyboardEvent) {
+      if ((ev.ctrlKey || ev.metaKey) && ev.key === "s") {
+        ev.preventDefault();
+        handleSave();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleSave]);
+
   function handleHtmlUpdate(newHtml: string) {
     setLocalHtmlDocument(newHtml);
-    if (lastBlobUrl) {
-      URL.revokeObjectURL(lastBlobUrl);
-    }
-    const blob = new Blob([newHtml || ""], { type: "text/html" });
-    const blobUrl = URL.createObjectURL(blob);
-    setLastBlobUrl(blobUrl);
+    setLocalStorageHtml(newHtml);
   }
 
   async function handleCommit() {
@@ -128,6 +156,24 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
       console.log("Save!", await resource.save(store));
       setCommitLoading(false);
     }
+  }
+
+  function handleSave() {
+    setPreviewHtmlDocument(localHtmlDocument);
+    setBlobFromHtml(localHtmlDocument);
+  }
+
+  function setBlobFromHtml(newHtml: string) {
+    if (lastBlobUrl) {
+      URL.revokeObjectURL(lastBlobUrl);
+    }
+    const blob = new Blob([newHtml || ""], { type: "text/html" });
+    const blobUrl = URL.createObjectURL(blob);
+    setLastBlobUrl(blobUrl);
+  }
+
+  function setLocalStorageHtml(newHtml: string) {
+    window.localStorage.setItem(documentPath, newHtml);
   }
 
   return (
@@ -155,55 +201,62 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
               background: "#eee",
-              padding: "0 6px 6px 6px",
-              borderWidth: "0 1px",
-              borderStyle: "solid",
-              borderColor: "#aaa",
+              width: "5px",
+              cursor: "ew-resize",
             }}
-          >
-            <div style={{ flexGrow: 1 }}></div>
-            <StyledButton
-              hue={122}
-              enabled={
-                localHtmlDocument !== serverHtmlDocument && !commitLoading
-              }
-              onActivate={handleCommit}
-              style={{ marginBottom: "8px" }}
-            >
-              Commit
-            </StyledButton>
-            <StyledButton
-              hue={0}
-              sat={20}
-              onActivate={() => onClose()}
-              enabled={true}
-            >
-              Close
-            </StyledButton>
-          </div>
+          ></div>
           <div
             style={{
               width: "50%",
               height: "100%",
               overflow: "auto",
               color: "black",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <CodeMirror
-              extensions={[htmlLang()]}
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "block",
-                boxSizing: "border-box",
-                border: "none",
-                outline: "none",
-              }}
-              value={localHtmlDocument}
-              onChange={(val) => handleHtmlUpdate(val)}
-            />
+            <div style={{ overflow: "auto", flexGrow: 1 }}>
+              <CodeMirror
+                extensions={[htmlLang()]}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  boxSizing: "border-box",
+                  border: "none",
+                  outline: "none",
+                }}
+                value={localHtmlDocument}
+                onChange={(val) => handleHtmlUpdate(val)}
+              />
+            </div>
+            <div style={{ background: "#666", textAlign: "right" }}>
+              <StyledButton
+                hue={50}
+                enabled={localHtmlDocument !== previewHtmlDocument}
+                onActivate={() => handleSave()}
+              >
+                Cmd+S = Preview
+              </StyledButton>
+              <StyledButton
+                hue={122}
+                enabled={
+                  localHtmlDocument !== serverHtmlDocument && !commitLoading
+                }
+                onActivate={handleCommit}
+              >
+                Commit
+              </StyledButton>
+              <StyledButton
+                hue={0}
+                sat={20}
+                onActivate={() => onClose()}
+                enabled={true}
+              >
+                Close
+              </StyledButton>
+            </div>
           </div>
         </>
       )}
