@@ -78,6 +78,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   const [localHtmlDocument, setLocalHtmlDocument] = useState("");
   const [previewHtmlDocument, setPreviewHtmlDocument] = useState("");
   const [lastBlobUrl, setLastBlobUrl] = useState<string>("");
+  const [iframeWidth, setIframeWidth] = useState<number>(50);
 
   useEffect(() => {
     const agentSecret =
@@ -176,6 +177,34 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
     window.localStorage.setItem(documentPath, newHtml);
   }
 
+  const [isResizing, setIsResizing] = useState(false);
+  function handleResizerStart() {
+    console.log("Start resizing");
+    setIsResizing(true);
+  }
+  function handleResizerEnd() {
+    console.log("End resizing");
+    setIsResizing(false);
+  }
+  function handleResizerDrag(ev: MouseEvent) {
+    console.log("Resizing drag", isResizing);
+    if (isResizing) {
+      const parentWidth = window.document.body.clientWidth ?? 0;
+      const xPosition = ev.clientX;
+      const percentage = Math.round((xPosition / parentWidth) * 100);
+      setIframeWidth(percentage);
+    }
+  }
+
+  useEffect(() => {
+    window.document.addEventListener("mousemove", handleResizerDrag);
+    window.document.addEventListener("mouseup", handleResizerEnd);
+    return () => {
+      window.document.removeEventListener("mousemove", handleResizerDrag);
+      window.document.removeEventListener("mouseup", handleResizerEnd);
+    };
+  }, [isResizing]);
+
   return (
     <div
       style={{
@@ -193,9 +222,20 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
         "Loading..."
       ) : (
         <>
+          {isResizing ? (
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+            ></div>
+          ) : null}
           <iframe
             sandbox="allow-scripts allow-popups"
-            style={{ width: "50%", height: "100%", border: "none" }}
+            style={{ width: `${iframeWidth}%`, height: "100%", border: "none" }}
             src={lastBlobUrl}
           ></iframe>
           <div
@@ -205,15 +245,16 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
               width: "5px",
               cursor: "ew-resize",
             }}
+            onMouseDown={handleResizerStart}
           ></div>
           <div
             style={{
-              width: "50%",
               height: "100%",
               overflow: "auto",
               color: "black",
               display: "flex",
               flexDirection: "column",
+              flexGrow: 1,
             }}
           >
             <div style={{ overflow: "auto", flexGrow: 1 }}>
