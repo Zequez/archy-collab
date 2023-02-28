@@ -35,6 +35,7 @@ let timeout: number;
 let clickCount = 0;
 
 function handleClick() {
+  if (rootElement.isConnected) return;
   if (clickCount >= CLICKS_TO_OPEN) {
     return;
   }
