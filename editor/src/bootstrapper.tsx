@@ -9,8 +9,10 @@ function loadOrShowEditor() {
   if (!rootElement.isConnected) {
     document.body.append(rootElement);
     renderEditor();
+    scrollbarHider(true);
   } else {
     rootElement.remove();
+    scrollbarHider(false);
   }
 }
 
@@ -23,10 +25,24 @@ function renderEditor() {
     document.querySelector("[astropath]")?.getAttribute("astropath") || "";
   root.render(
     <LatestEditor
-      onClose={() => rootElement.remove()}
+      onClose={() => {
+        rootElement.remove();
+        scrollbarHider(false);
+      }}
       documentPath={astroPath}
     />
   );
+}
+
+let prevOverflow: string = "";
+function scrollbarHider(hidden: boolean) {
+  if (hidden) {
+    prevOverflow = prevOverflow || document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = prevOverflow;
+    prevOverflow = "";
+  }
 }
 
 const CLICKS_TO_OPEN = 5;

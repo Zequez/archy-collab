@@ -187,7 +187,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
     if (isResizing) {
       const parentWidth = window.document.body.clientWidth ?? 0;
       const xPosition = ev.clientX;
-      const percentage = Math.round((xPosition / parentWidth) * 100);
+      const percentage = Math.round((xPosition / parentWidth) * 1000) / 10;
       setIframeWidth(percentage);
     }
   }
@@ -230,8 +230,14 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
             ></div>
           ) : null}
           <iframe
-            sandbox="allow-scripts allow-popups"
-            style={{ width: `${iframeWidth}%`, height: "100%", border: "none" }}
+            sandbox="allow-scripts allow-popups allow-same-origin"
+            allow="microphone"
+            style={{
+              width: `${iframeWidth}%`,
+              height: "100%",
+              border: "none",
+              flexShrink: 0,
+            }}
             src={lastBlobUrl}
           ></iframe>
           <div
