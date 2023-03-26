@@ -8,6 +8,7 @@ import ActionBar from "./ActionBar";
 import { useDocumentFromServer } from "./lib/api";
 import { useAgent } from "./lib/agent";
 import useDocumentWithBlob from "./lib/useDocumentWithBlob";
+import { useCtrlS } from "./lib/globalKeyBindings";
 
 type EditorProps = {
   onClose: () => void;
@@ -41,28 +42,15 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
     }
   }
 
-  useEffect(() => {
-    function handleKeyDown(ev: KeyboardEvent) {
-      if ((ev.ctrlKey || ev.metaKey) && ev.key === "s") {
-        ev.preventDefault();
-        handleSave();
-      }
-    }
+  const handleSave = useCallback(() => {
+    setPreviewHtmlDocument(editorHtmlDocument);
+  }, [editorHtmlDocument]);
 
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleSave]);
+  useCtrlS(handleSave);
 
   function handleEditorHtmlUpdate(newHtml: string) {
     setEditorHtmlDocument(newHtml);
     setLocalStorageHtml(newHtml);
-  }
-
-  function handleSave() {
-    setPreviewHtmlDocument(editorHtmlDocument);
   }
 
   function setLocalStorageHtml(newHtml: string) {
@@ -77,9 +65,11 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   function handleResizerStart() {
     setIsResizing(true);
   }
+
   function handleResizerEnd() {
     setIsResizing(false);
   }
+
   function handleResizerDrag(ev: MouseEvent) {
     if (isResizing) {
       const parentWidth = window.document.body.clientWidth ?? 0;
@@ -90,12 +80,14 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   }
 
   useEffect(() => {
-    window.document.addEventListener("mousemove", handleResizerDrag);
-    window.document.addEventListener("mouseup", handleResizerEnd);
-    return () => {
-      window.document.removeEventListener("mousemove", handleResizerDrag);
-      window.document.removeEventListener("mouseup", handleResizerEnd);
-    };
+    if (isResizing) {
+      window.document.addEventListener("mousemove", handleResizerDrag);
+      window.document.addEventListener("mouseup", handleResizerEnd);
+      return () => {
+        window.document.removeEventListener("mousemove", handleResizerDrag);
+        window.document.removeEventListener("mouseup", handleResizerEnd);
+      };
+    }
   }, [isResizing]);
 
   return (
