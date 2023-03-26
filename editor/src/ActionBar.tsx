@@ -19,7 +19,13 @@ const ActionBar = ({
   isCommitting,
 }: ActionBarProps) => {
   return (
-    <div style={{ background: "#666", textAlign: "right" }}>
+    <div
+      style={{
+        background: "hsl(0,0%,95%)",
+        borderTop: "solid 1px hsl(0,0%,80%)",
+        textAlign: "right",
+      }}
+    >
       <StyledButton
         hue={50}
         enabled={localIsPreviewed}

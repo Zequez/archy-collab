@@ -137,7 +137,7 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
               alignItems: "center",
               justifyContent: "center",
               boxShadow:
-                "inset 1px 0 0 rgba(0,0,0,0.25), inset -1px 0 0 rgba(0,0,0,0.25)",
+                "inset 1px 0 0  hsl(0,0%,80%), inset -1px 0 0  hsl(0,0%,80%)",
               width: "10px",
               cursor: "ew-resize",
               flexShrink: 0,
