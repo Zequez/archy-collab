@@ -9,6 +9,7 @@ import { useDocumentFromServer } from "./lib/api";
 import { useAgent } from "./lib/agent";
 import useDocumentWithBlob from "./lib/useDocumentWithBlob";
 import { useCtrlS } from "./lib/globalKeyBindings";
+import { GripLinesVertical } from "./lib/icons";
 
 type EditorProps = {
   onClose: () => void;
@@ -132,15 +133,21 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
           <div
             style={{
               display: "flex",
-              background: "white",
+              background: "hsl(0,0%,95%)",
+              alignItems: "center",
+              justifyContent: "center",
               boxShadow:
-                "inset 2px 0 1px rgba(0,0,0,0.3), inset -2px 0 1px rgba(0,0,0,0.3)",
-              width: "8px",
+                "inset 1px 0 0 rgba(0,0,0,0.25), inset -1px 0 0 rgba(0,0,0,0.25)",
+              width: "10px",
               cursor: "ew-resize",
               flexShrink: 0,
             }}
             onMouseDown={handleResizerStart}
-          ></div>
+          >
+            <div style={{ width: "6px", color: "rgba(0,0,0,0.25)" }}>
+              <GripLinesVertical />
+            </div>
+          </div>
           <div
             style={{
               height: "100%",
