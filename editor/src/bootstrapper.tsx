@@ -1,4 +1,5 @@
 import React from "react";
+import "virtual:windi.css";
 import { createRoot } from "react-dom/client";
 import Editor from "./Editor";
 

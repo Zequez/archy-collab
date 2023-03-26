@@ -1,9 +1,10 @@
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import CodeMirror from "@uiw/react-codemirror";
+import HTMLTreeEditor from "./HTMLTreeEditor";
 import { html as htmlLang } from "@codemirror/lang-html";
-import { parse } from "node-html-parser";
 import ActionBar from "./ActionBar";
+import cx from "classnames";
 // import { generateStyles } from "./lib/utils";
 import { useDocumentFromServer } from "./lib/api";
 import { useAgent } from "./lib/agent";
@@ -91,87 +92,51 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
     }
   }, [isResizing]);
 
+  // Editor Mode
+
+  const [editorMode, setEditorMode] = useState<EditorMode>("RAW_CODE");
+
   return (
-    <div
-      style={{
-        display: "flex",
-        position: "fixed",
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        background: "white",
-        zIndex: 9999,
-      }}
-    >
+    <div className="flex fixed inset-0 bg-white z-[9999]">
       {loading ? (
         "Loading..."
       ) : (
         <>
-          {isResizing ? (
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}
-            ></div>
-          ) : null}
+          {isResizing ? <div className="fixed inset-0"></div> : null}
           <iframe
             sandbox="allow-scripts allow-popups allow-same-origin"
             allow="microphone"
-            style={{
-              width: `${iframeWidth}%`,
-              height: "100%",
-              border: "none",
-              flexShrink: 0,
-            }}
+            className="h-full border-none flex-shrink-0"
+            style={{ width: `${iframeWidth}%` }}
             src={previewBlobUrl}
           ></iframe>
           <div
+            className="flex bg-gray-100 items-center justify-center w-3 cursor-ew-resize flex-shrink-0"
             style={{
-              display: "flex",
-              background: "hsl(0,0%,95%)",
-              alignItems: "center",
-              justifyContent: "center",
               boxShadow:
                 "inset 1px 0 0  hsl(0,0%,80%), inset -1px 0 0  hsl(0,0%,80%)",
-              width: "10px",
-              cursor: "ew-resize",
-              flexShrink: 0,
             }}
             onMouseDown={handleResizerStart}
           >
-            <div style={{ width: "6px", color: "rgba(0,0,0,0.25)" }}>
+            <div className="w-2 text-gray-400">
               <GripLinesVertical />
             </div>
           </div>
-          <div
-            style={{
-              height: "100%",
-              overflow: "auto",
-              color: "black",
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-            }}
-          >
+          <div className="h-full overflow-auto text-black flex flex-col flex-grow">
             <div style={{ overflow: "auto", flexGrow: 1 }}>
-              <CodeMirror
-                extensions={[htmlLang()]}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "block",
-                  boxSizing: "border-box",
-                  border: "none",
-                  outline: "none",
-                }}
-                value={editorHtmlDocument}
-                onChange={(val) => handleEditorHtmlUpdate(val)}
-              />
+              {editorMode === "RAW_CODE" ? (
+                <CodeMirror
+                  extensions={[htmlLang()]}
+                  className="block w-full h-full border-box border-none outline-none"
+                  value={editorHtmlDocument}
+                  onChange={(val) => handleEditorHtmlUpdate(val)}
+                />
+              ) : (
+                <HTMLTreeEditor
+                  value={editorHtmlDocument}
+                  onChange={handleEditorHtmlUpdate}
+                />
+              )}
             </div>
             <ActionBar
               onSave={handleSave}
@@ -180,11 +145,57 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
               localIsPreviewed={editorHtmlDocument !== previewHtmlDocument}
               localIsDirty={editorHtmlDocument !== serverHtmlDocument}
               isCommitting={commitLoading}
+              left={
+                <>
+                  <EditorModeButton
+                    text="CODE"
+                    mode="RAW_CODE"
+                    currentMode={editorMode}
+                    onClick={setEditorMode}
+                  />
+                  <EditorModeButton
+                    text="BLOCKS"
+                    mode="HTML_TREE"
+                    currentMode={editorMode}
+                    onClick={setEditorMode}
+                  />
+                </>
+              }
             />
           </div>
         </>
       )}
     </div>
+  );
+};
+
+type EditorMode = "RAW_CODE" | "HTML_TREE";
+
+const EditorModeButton = ({
+  text,
+  currentMode,
+  mode,
+  onClick,
+}: {
+  text: string;
+  currentMode: EditorMode;
+  mode: EditorMode;
+  onClick: (mode: EditorMode) => void;
+}) => {
+  return (
+    <button
+      className={cx(
+        "h-full bg-gradient-to-b from-green-300 to-green-400/80 text-white/80 px-2 mr-[1px] font-bold filter saturate-50",
+        {
+          "shadow-inner border-b-4 border-solid border-green-600 saturate-100":
+            currentMode === mode,
+        }
+      )}
+      style={{ textShadow: "0 1px 0 hsla(0,0%,0%,0.2)" }}
+      onClick={() => onClick(mode)}
+    >
+      {text}
+    </button>
   );
 };
 

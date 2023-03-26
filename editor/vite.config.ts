@@ -1,8 +1,10 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import WindiCSS from "vite-plugin-windicss";
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig({
-  plugins: [],
+  plugins: [WindiCSS(), cssInjectedByJsPlugin()],
   root: resolve(__dirname, "."),
   server: {
     port: 3917,
