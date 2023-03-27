@@ -83,13 +83,14 @@ document.addEventListener("touchstart", handleClick);
   loadOrShowEditor();
 };
 
-if (import.meta.hot) {
-  console.log("HMR!");
-  import.meta.hot.accept("./Editor", (newEditor) => {
-    console.log("New Editor!", newEditor);
-    if (newEditor) {
-      LatestEditor = newEditor.default;
-      resetEditor();
-    }
-  });
-}
+// if (import.meta.hot) {
+//   console.log("HMR!");
+//   // import.meta.hot.accept();
+//   import.meta.hot.accept("./Editor", (newEditor) => {
+//     console.log("New Editor!", newEditor);
+//     if (newEditor) {
+//       LatestEditor = newEditor.default;
+//       resetEditor();
+//     }
+//   });
+// }
