@@ -63,16 +63,18 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
       <div className="pl-4">
         <div className="flex">
           {node.nodeType === Node.ELEMENT_NODE ? (
-            <input
-              type="text"
-              className="font-mono font-bold flex-grow"
-              value={node.tagName.toLowerCase()}
-              onChange={(ev) => renameNodeAndRefresh(node, ev.target.value)}
-            />
+            <div className="flex flex-grow">
+              <input
+                type="text"
+                className="font-mono font-bold flex-grow px-2 py-1 my-0.25 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500"
+                value={node.tagName.toLowerCase()}
+                onChange={(ev) => renameNodeAndRefresh(node, ev.target.value)}
+              />
+            </div>
           ) : node.nodeType === Node.TEXT_NODE ? (
             <TextareaAutosize
               minRows={1}
-              className="text-gray-600 flex-grow resize-none"
+              className="text-gray-600 bg-white px-2 py-1 flex-grow resize-none focus:outline outline-solid-green-500"
               value={node.textContent || ""}
               onChange={(ev) => changeTextAndRefresh(node, ev.target.value)}
             />
@@ -83,7 +85,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     );
   };
 
-  return <div>{renderNode(rootNode)}</div>;
+  return <div className="bg-yellow-50 p-1">{renderNode(rootNode)}</div>;
 };
 
 export default HTMLTreeEditor;
