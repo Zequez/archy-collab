@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import cx from "classnames";
+import { CaretUp } from "./lib/icons";
 
 type HTMLTreeEditorProps = {
   value: string;
@@ -54,21 +56,29 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
   function changeAttributeAndRefresh(
     node: Element,
     attrName: string,
-    newVal: string
+    newVal: string | boolean
   ) {
-    node.setAttribute(attrName, newVal);
+    if (newVal === false) {
+      node.removeAttribute(attrName);
+    } else if (newVal === true) {
+      node.setAttribute(attrName, "");
+    } else {
+      node.setAttribute(attrName, newVal);
+    }
     setEdits(edits + 1);
     serialize();
   }
 
+  const ATTRIBUTES_NOT_TO_RENDER = ["class", "data-collapsed"];
+
   const renderAttributes = (node: Element) => {
     const attributes = Array.from(node.attributes).filter(
-      ({ name }) => name !== "class"
+      ({ name }) => !ATTRIBUTES_NOT_TO_RENDER.includes(name)
     );
     return (
       <div>
         {attributes.map(({ name, value }) => (
-          <div className="text-xs text-center whitespace-nowrap font-mono">
+          <div className="text-xs text-center whitespace-nowrap font-mono ml-0.25">
             <div
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -101,7 +111,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     const noClass = STYLELESS_NODES.includes(node.tagName.toLowerCase());
     return !noClass ? (
       <TextareaAutosize
-        className="bg-cyan-400/25 min-h-full resize-none rounded-md border border-solid border-black/10 ml-0.5 px-2 py-1 m-0 flex-grow"
+        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-1 m-0 flex-grow"
         style={{ lineHeight: "26px" }}
         placeholder="Style directives"
         minRows={1}
@@ -113,21 +123,52 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     ) : null;
   };
 
-  const renderNode = (node: Element) => {
-    const children = Array.from(node.childNodes).filter(
+  const nodeIsCollapsed = (node: Element) =>
+    node.nodeType === Node.ELEMENT_NODE
+      ? node.getAttribute("data-collapsed") !== null
+      : false;
+
+  const renderToggle = (node: Element, children: Element[]) => {
+    const isCollapsed = nodeIsCollapsed(node);
+    return children.length ? (
+      <button
+        className={cx(
+          "*flex-vh *b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
+          { "bg-yellow-700/50": !isCollapsed, "bg-black": isCollapsed }
+        )}
+        onClick={() =>
+          changeAttributeAndRefresh(node, "data-collapsed", !isCollapsed)
+        }
+      >
+        {isCollapsed ? children.length : <CaretUp />}
+      </button>
+    ) : null;
+  };
+
+  const renderableChildNodes = (node: Element) => {
+    const childNodes = Array.from(node.childNodes).filter(
       (child) =>
         child.nodeType === Node.ELEMENT_NODE ||
         (child.nodeType === Node.TEXT_NODE &&
           (!isBlank(child.textContent) || child === editingNode))
-    ) as Element[];
+    );
+    return childNodes as Element[];
+  };
+
+  const renderNode = (node: Element, i: number) => {
+    const children = renderableChildNodes(node);
 
     return (
-      <div className="pl-4 border-l border-l-yellow-400/10 border-solid">
+      <div
+        className="pl-4 border-l border-l-yellow-400/10 border-solid"
+        key={i}
+      >
         <div className="flex">
           {node.nodeType === Node.ELEMENT_NODE ? (
-            <div className="flex flex-grow my-0.25">
+            <div className="*flex-v flex-grow my-0.25">
+              {renderToggle(node, children)}
               <input
-                className="block w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
+                className="block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
                 // contentEditable={true}
                 // suppressContentEditableWarning={true}
                 value={node.tagName.toLowerCase()}
@@ -148,12 +189,15 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
             />
           ) : null}
         </div>
-        {children.map((child) => renderNode(child))}
+
+        {nodeIsCollapsed(node)
+          ? null
+          : children.map((child, i) => renderNode(child, i))}
       </div>
     );
   };
 
-  return <div className="bg-yellow-50 p-1">{renderNode(rootNode)}</div>;
+  return <div className="bg-yellow-50 p-1">{renderNode(rootNode, 0)}</div>;
 };
 
 export default HTMLTreeEditor;
