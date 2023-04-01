@@ -1,3 +1,5 @@
+export const RAW_TEXT_CHILD_TAGS = ["script", "style"];
+
 export const renameNode = (node: Element, newNodeName: string): Element => {
   const newNode = node.ownerDocument!.createElement(newNodeName);
   const attributes = node.getAttributeNames();
@@ -58,4 +60,12 @@ export const generateNodeStyleDirective = (node: Element): string => {
   } else {
     return "";
   }
+};
+
+export const getUnescapedText = (node: Element) => {
+  const useRaw =
+    node.parentElement &&
+    RAW_TEXT_CHILD_TAGS.includes(node.parentElement.nodeName.toLowerCase());
+  const text = useRaw ? node.parentElement.innerHTML : node.textContent || "";
+  return text;
 };

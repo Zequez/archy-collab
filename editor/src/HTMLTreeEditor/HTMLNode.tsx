@@ -6,6 +6,8 @@ import {
   renderableChildNodes,
   nodeIsCollapsed,
   generateNodeStyleDirective,
+  RAW_TEXT_CHILD_TAGS,
+  getUnescapedText,
 } from "./helpers";
 
 const STYLELESS_NODES = ["meta", "title", "script", "link", "head"];
@@ -52,7 +54,7 @@ const HTMLNode = ({
     const noClass = STYLELESS_NODES.includes(node.tagName.toLowerCase());
     return !noClass ? (
       <TextareaAutosize
-        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs"
+        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs font-mono"
         style={{ lineHeight: "14px" }}
         placeholder="Style directives"
         minRows={1}

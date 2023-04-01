@@ -1,54 +1,47 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { renameNode, isBlank, extractContentInCurlyBraces } from "./helpers";
+import { serializeHtml } from "./htmlSerializer";
 import HTMLNode from "./HTMLNode";
+
+const RAW_TEXT_CHILD_TAGS = ["script", "style"];
 
 type HTMLTreeEditorProps = {
   value: string;
   onChange: (val: string) => void;
 };
 
-const N = {
-  renameNode: (node: Element, newNodeName: string): Element => {
-    const newNode = node.ownerDocument!.createElement(newNodeName);
-    const attributes = node.getAttributeNames();
-    for (const attrName of attributes) {
-      newNode.setAttribute(attrName, node.getAttribute(attrName)!);
-    }
-    while (node.firstChild) {
-      newNode.appendChild(node.firstChild);
-    }
-    node.parentNode!.replaceChild(newNode, node);
-    return newNode;
-  },
-};
-
-function isBlank(text: string | null): boolean {
-  return !text || /^\s*$/.test(text);
-}
-
-function extractContentInCurlyBraces(text: string): [string, string] {
-  const regex = /{([^}]*)}/;
-  const match = regex.exec(text);
-  if (!match) {
-    return [text, ""];
-  }
-  const content = match[1];
-  const withoutContent = text.replace(match[0], "{}");
-  return [withoutContent, content];
-}
-
 const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
   const [edits, setEdits] = useState(0);
   const [editingNode, setEditingNode] = useState<Element | null>(null);
   const doc = useMemo(
     () => new DOMParser().parseFromString(value, "text/html"),
-    [value]
+    []
   );
+
+  useEffect(() => {
+    function handleKeyDown(ev: KeyboardEvent) {
+      // console.log(ev.key, ev.target);
+      if (ev.key === "ArrowDown") {
+      } else if (ev.key === "ArrowUp") {
+      }
+      // if ((ev.ctrlKey || ev.metaKey) && ev.key === "s") {
+      // ev.preventDefault();
+      // }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const rootNode = doc.documentElement;
 
   function refresh() {
     setEdits(edits + 1);
-    onChange(serialize());
+    onChange(serializeHtml(doc));
+    // onChange(serialize());
   }
 
   function serialize() {
@@ -57,18 +50,25 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     return documentString;
   }
 
-  function renameNode(node: Element, newNodeName: string) {
-    const newNode = N.renameNode(node, newNodeName);
-    console.log("Renaming node!");
+  function changeNodeName(node: Element, newNodeName: string) {
+    const newNode = renameNode(node, newNodeName);
     if (editingNode === node) {
-      console.log("Editing node is the one being renamed");
       setEditingNode(newNode);
     }
     refresh();
   }
 
   function changeText(node: Element, newText: string) {
+    // console.log(node, newText, node.parentElement, node.parentElement?.tagName);
     node.textContent = newText;
+    // if (
+    //   node.parentElement &&
+    //   RAW_TEXT_CHILD_TAGS.includes(node.parentElement.tagName.toLowerCase())
+    // ) {
+    //   node.parentElement.innerHTML = newText;
+    // } else {
+    //   node.textContent = newText;
+    // }
     refresh();
   }
 
@@ -108,7 +108,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
         node={rootNode}
         editingNode={editingNode}
         onFocus={(node) => setEditingNode(node)}
-        onSetTagName={renameNode}
+        onSetTagName={changeNodeName}
         onSetAttribute={changeAttribute}
         onSetStyleDirectives={changeStyleDirectives}
         onSetText={changeText}
@@ -116,39 +116,5 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     </div>
   );
 };
-
-const renderableChildNodes = (node: Element, editingNode: Element | null) => {
-  const childNodes = Array.from(node.childNodes).filter(
-    (child) =>
-      child.nodeType === Node.ELEMENT_NODE ||
-      (child.nodeType === Node.TEXT_NODE &&
-        (!isBlank(child.textContent) || child === editingNode))
-  );
-  return childNodes as Element[];
-};
-
-const nodeIsCollapsed = (node: Element) =>
-  node.nodeType === Node.ELEMENT_NODE
-    ? node.getAttribute("data-collapsed") !== null
-    : false;
-
-const generateNodeStyleDirective = (node: Element): string => {
-  const classes = node.getAttribute("class");
-  const styles = node.getAttribute("style");
-  if (classes) {
-    if (styles && classes.match("{}")) {
-      return classes.replace("{}", `{${styles}}`);
-    } else {
-      return classes;
-    }
-  } else if (styles) {
-    return `{${styles}}`;
-  } else {
-    return "";
-  }
-};
-
-const STYLELESS_NODES = ["meta", "title", "script", "link", "head"];
-const ATTRIBUTES_NOT_TO_RENDER = ["class", "style", "data-collapsed"];
 
 export default HTMLTreeEditor;
