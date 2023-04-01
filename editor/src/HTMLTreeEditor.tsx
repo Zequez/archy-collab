@@ -105,10 +105,10 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     const attributes = Array.from(node.attributes).filter(
       ({ name }) => !ATTRIBUTES_NOT_TO_RENDER.includes(name)
     );
-    return (
-      <div>
+    return attributes.length > 0 ? (
+      <div className="flex flex-wrap ml-0.5">
         {attributes.map(({ name, value }) => (
-          <div className="text-xs text-center whitespace-nowrap font-mono ml-0.25">
+          <div className="text-xs text-center whitespace-nowrap font-mono mx-0.25">
             <div
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -126,7 +126,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
           </div>
         ))}
       </div>
-    );
+    ) : null;
   };
 
   const STYLELESS_NODES = ["meta", "title", "script", "link", "head"];
@@ -151,8 +151,8 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     const noClass = STYLELESS_NODES.includes(node.tagName.toLowerCase());
     return !noClass ? (
       <TextareaAutosize
-        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-1 m-0 flex-grow"
-        style={{ lineHeight: "26px" }}
+        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs"
+        style={{ lineHeight: "14px" }}
         placeholder="Style directives"
         minRows={1}
         value={generateNodeStyleDirective(node)}
@@ -213,8 +213,10 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
                 //   renameNodeAndRefresh(node, ev.currentTarget.innerText)
                 // }
               />
-              {renderAttributes(node)}
-              {renderStyleDirective(node)}
+              <div className="flex-grow flex flex-col">
+                {renderAttributes(node)}
+                {renderStyleDirective(node)}
+              </div>
             </div>
           ) : node.nodeType === Node.TEXT_NODE ? (
             <TextareaAutosize
