@@ -21,6 +21,7 @@ type HTMLNodeProps = {
   onSetTagName: (node: Element, newName: string) => void;
   onSetStyleDirectives: (node: Element, styleDirective: string) => void;
   onSetText: (node: Element, text: string) => void;
+  depth: number;
 };
 
 const HTMLNode = ({
@@ -31,6 +32,7 @@ const HTMLNode = ({
   onSetTagName,
   onSetStyleDirectives,
   onSetText,
+  depth,
 }: HTMLNodeProps) => {
   const children = renderableChildNodes(node, editingNode);
   const isEditing = node === editingNode;
@@ -96,15 +98,18 @@ const HTMLNode = ({
   };
 
   return (
-    <div className="pl-4 border-l border-l-yellow-400/10 border-solid">
+    <div
+      className="relative border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10"
+      style={{ paddingLeft: `${depth}rem` }}
+    >
+      {isEditing ? (
+        <div className="rounded-md bg-yellow-400/10 absolute inset-0 pointer-events-none"></div>
+      ) : null}
       <div
-        className="flex relative group"
+        className="flex group"
         // tabIndex={0}
         onFocus={() => onFocus(node)}
       >
-        {isEditing ? (
-          <div className="rounded-md bg-yellow-400/10 absolute inset-0 pointer-events-none"></div>
-        ) : null}
         {node.nodeType === Node.ELEMENT_NODE ? (
           <div className="*flex-v flex-grow my-0.25">
             {renderToggle(node, children)}
@@ -132,21 +137,6 @@ const HTMLNode = ({
           />
         ) : null}
       </div>
-
-      {nodeIsCollapsed(node)
-        ? null
-        : children.map((child, i) => (
-            <HTMLNode
-              key={i}
-              node={child}
-              editingNode={editingNode}
-              onFocus={onFocus}
-              onSetTagName={onSetTagName}
-              onSetAttribute={onSetAttribute}
-              onSetStyleDirectives={onSetStyleDirectives}
-              onSetText={onSetText}
-            />
-          ))}
     </div>
   );
 };

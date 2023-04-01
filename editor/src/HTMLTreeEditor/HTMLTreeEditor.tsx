@@ -1,5 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import { renameNode, isBlank, extractContentInCurlyBraces } from "./helpers";
+import {
+  renameNode,
+  renderableChildNodes,
+  isBlank,
+  extractContentInCurlyBraces,
+  nodeIsCollapsed,
+} from "./helpers";
 import { serializeHtml } from "./htmlSerializer";
 import HTMLNode from "./HTMLNode";
 
@@ -10,13 +16,29 @@ type HTMLTreeEditorProps = {
   onChange: (val: string) => void;
 };
 
+let _key = 0;
+const addKeyToNode = (node: Element) => {
+  (node as any)._key = _key++;
+};
+
+function generateDocument(html: string) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  function assignKeys(node: Element) {
+    addKeyToNode(node);
+    if (node.childNodes.length) {
+      Array.from(node.childNodes).forEach((child) =>
+        assignKeys(child as Element)
+      );
+    }
+  }
+  assignKeys(doc.documentElement);
+  return doc;
+}
+
 const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
   const [edits, setEdits] = useState(0);
   const [editingNode, setEditingNode] = useState<Element | null>(null);
-  const doc = useMemo(
-    () => new DOMParser().parseFromString(value, "text/html"),
-    []
-  );
+  const doc = useMemo(() => generateDocument(value), []);
 
   useEffect(() => {
     function handleKeyDown(ev: KeyboardEvent) {
@@ -41,17 +63,11 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
   function refresh() {
     setEdits(edits + 1);
     onChange(serializeHtml(doc));
-    // onChange(serialize());
-  }
-
-  function serialize() {
-    const serializer = new XMLSerializer();
-    const documentString = serializer.serializeToString(doc);
-    return documentString;
   }
 
   function changeNodeName(node: Element, newNodeName: string) {
     const newNode = renameNode(node, newNodeName);
+    addKeyToNode(newNode);
     if (editingNode === node) {
       setEditingNode(newNode);
     }
@@ -59,16 +75,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
   }
 
   function changeText(node: Element, newText: string) {
-    // console.log(node, newText, node.parentElement, node.parentElement?.tagName);
     node.textContent = newText;
-    // if (
-    //   node.parentElement &&
-    //   RAW_TEXT_CHILD_TAGS.includes(node.parentElement.tagName.toLowerCase())
-    // ) {
-    //   node.parentElement.innerHTML = newText;
-    // } else {
-    //   node.textContent = newText;
-    // }
     refresh();
   }
 
@@ -102,19 +109,34 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     refresh();
   }
 
-  return (
-    <div className="bg-yellow-50 p-1">
+  function collectNodesWithDepth(
+    node: Element,
+    depth: number = 0,
+    acc: JSX.Element[] = []
+  ): JSX.Element[] {
+    const children = renderableChildNodes(node, editingNode);
+    acc.push(
       <HTMLNode
-        node={rootNode}
+        key={(node as any)._key}
+        node={node}
         editingNode={editingNode}
         onFocus={(node) => setEditingNode(node)}
         onSetTagName={changeNodeName}
         onSetAttribute={changeAttribute}
         onSetStyleDirectives={changeStyleDirectives}
         onSetText={changeText}
+        depth={depth}
       />
-    </div>
-  );
+    );
+    if (!nodeIsCollapsed(node)) {
+      children.forEach((child) => collectNodesWithDepth(child, depth + 1, acc));
+    }
+    return acc;
+  }
+
+  const nodes = collectNodesWithDepth(rootNode);
+
+  return <div className="bg-yellow-50 p-1 pl-4">{nodes}</div>;
 };
 
 export default HTMLTreeEditor;
