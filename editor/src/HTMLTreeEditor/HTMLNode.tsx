@@ -75,10 +75,11 @@ const HTMLNode = ({
               onToggle={(collapsed) => onToggle(node, collapsed)}
             />
             <ElementName node={node} onChange={(v) => onSetTagName(node, v)} />
-            {!nodeAttributes(node).length ? (
-              <AddAttributeButton onClick={() => addNewAttribute(node)} />
-            ) : null}
-            <div className="flex-grow flex flex-col">
+            <div
+              className={cx("flex-grow flex flex-col", {
+                "contents!": !nodeAttributes(node).length,
+              })}
+            >
               <Attributes
                 node={node}
                 onAdd={() => addNewAttribute(node)}
@@ -197,10 +198,16 @@ const Attributes = ({
     setErrorStatus(new Map(errorStatus));
   };
 
-  return attributes.length > 0 ? (
-    <div className="flex flex-wrap ml-0.5">
+  let lastAttrIndex = 0;
+  return (
+    <div
+      className={cx("flex flex-wrap ml-0.5", {
+        "contents!": !attributes.length,
+      })}
+    >
       {attributes.map(({ name, value }, i) => {
         const errorAttr = errorStatus.get(node);
+        lastAttrIndex = i;
         return (
           <div
             className={cx(
@@ -227,7 +234,7 @@ const Attributes = ({
       })}
       <AddAttributeButton onClick={onAdd} />
     </div>
-  ) : null;
+  );
 };
 
 type ContentEditableProps = {
