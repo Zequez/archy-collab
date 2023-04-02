@@ -100,7 +100,7 @@ const HTMLNode = ({
   return (
     <div
       className="relative border-0 border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10"
-      style={{ paddingLeft: `${depth}rem` }}
+      style={{ paddingLeft: `${depth + 1}rem` }}
     >
       {isEditing ? (
         <div className="rounded-md bg-yellow-400/10 absolute inset-0 pointer-events-none"></div>

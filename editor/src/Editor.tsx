@@ -127,8 +127,8 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
               )}
             ></div>
           </div>
-          <div className="h-full text-black flex flex-col flex-grow relative pb-14 pt-2 overflow-hidden">
-            <div className="flex-grow flex w-full h-full">
+          <div className="h-full text-black flex flex-col flex-grow relative pb-12 overflow-hidden">
+            <div className="flex-grow flex w-full h-full pt-2">
               {editorMode === "RAW_CODE" ? (
                 <div className="flex-grow rounded-md shadow-md w-full h-full overflow-auto mr-2">
                   <CodeMirror
