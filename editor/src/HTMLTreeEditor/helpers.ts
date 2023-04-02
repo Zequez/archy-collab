@@ -69,3 +69,10 @@ export const getUnescapedText = (node: Element) => {
   const text = useRaw ? node.parentElement.innerHTML : node.textContent || "";
   return text;
 };
+
+export const ATTRIBUTES_NOT_TO_RENDER = ["class", "style", "data-collapsed"];
+
+export const nodeAttributes = (node: Element) =>
+  Array.from(node.attributes).filter(
+    ({ name }) => !ATTRIBUTES_NOT_TO_RENDER.includes(name)
+  );

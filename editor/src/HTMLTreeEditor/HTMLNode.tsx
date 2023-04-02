@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import cx from "classnames";
 import TextareaAutosize from "react-textarea-autosize";
 import { CaretUp } from "../lib/icons";
@@ -6,17 +6,16 @@ import {
   renderableChildNodes,
   nodeIsCollapsed,
   generateNodeStyleDirective,
-  RAW_TEXT_CHILD_TAGS,
-  getUnescapedText,
+  nodeAttributes,
 } from "./helpers";
 
 const STYLELESS_NODES = ["meta", "title", "script", "link", "head"];
-const ATTRIBUTES_NOT_TO_RENDER = ["class", "style", "data-collapsed"];
 
 type HTMLNodeProps = {
   node: Element;
   editingNode: Element | null;
   onFocus: (node: Element) => void;
+  onRenameAttribute: (node: Element, name: string, newName: string) => void;
   onSetAttribute: (node: Element, attr: string, val: string | boolean) => void;
   onSetTagName: (node: Element, newName: string) => void;
   onSetStyleDirectives: (node: Element, styleDirective: string) => void;
@@ -28,6 +27,7 @@ const HTMLNode = ({
   node,
   editingNode,
   onFocus,
+  onRenameAttribute,
   onSetAttribute,
   onSetTagName,
   onSetStyleDirectives,
@@ -36,65 +36,17 @@ const HTMLNode = ({
 }: HTMLNodeProps) => {
   const children = renderableChildNodes(node, editingNode);
   const isEditing = node === editingNode;
+  const [newAttrName, setNewAttrName] = useState<null | string>(null);
+  const [newAttrValue, setNewAttrValue] = useState<null | string>(null);
 
-  const renderToggle = (node: Element, children: Element[]) => {
-    const isCollapsed = nodeIsCollapsed(node);
-    return children.length ? (
-      <button
-        className={cx(
-          "flex-vh b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
-          { "bg-yellow-700/50": !isCollapsed, "bg-black": isCollapsed }
-        )}
-        onClick={() => onSetAttribute(node, "data-collapsed", !isCollapsed)}
-      >
-        {isCollapsed ? children.length : <CaretUp />}
-      </button>
-    ) : null;
+  const addNewAttribute = (node: Element) => {
+    setNewAttrName("");
+    setNewAttrValue("");
+    console.log("NEW ATTRIBUTE!", node);
   };
 
-  const renderStyleDirective = (node: Element) => {
-    const noClass = STYLELESS_NODES.includes(node.tagName.toLowerCase());
-    return !noClass ? (
-      <TextareaAutosize
-        className="bg-cyan-400/25 min-h-full resize-none rounded-md b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs font-mono"
-        style={{ lineHeight: "14px" }}
-        placeholder="Style directives"
-        minRows={1}
-        value={generateNodeStyleDirective(node)}
-        onChange={(ev) => onSetStyleDirectives(node, ev.target.value)}
-      />
-    ) : null;
-  };
-
-  const renderAttributes = (node: Element) => {
-    const attributes = Array.from(node.attributes).filter(
-      ({ name }) => !ATTRIBUTES_NOT_TO_RENDER.includes(name)
-    );
-    return attributes.length > 0 ? (
-      <div className="flex flex-wrap ml-0.5">
-        {attributes.map(({ name, value }) => (
-          <div
-            className="text-xs text-center whitespace-nowrap font-mono mx-0.25"
-            key={name}
-          >
-            <div
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              className="bg-red-500/25 px-1 rounded-t-md"
-            >
-              {name}
-            </div>
-            <div
-              contentEditable={true}
-              suppressContentEditableWarning={true}
-              className="bg-red-500/10 px-1 rounded-b-md"
-            >
-              {value}
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : null;
+  const onToggle = (node: Element, collapsed: boolean) => {
+    onSetAttribute(node, "data-collapsed", collapsed);
   };
 
   return (
@@ -112,20 +64,25 @@ const HTMLNode = ({
       >
         {node.nodeType === Node.ELEMENT_NODE ? (
           <div className="flex-v flex-grow my-0.25">
-            {renderToggle(node, children)}
-            <input
-              className="block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
-              // contentEditable={true}
-              // suppressContentEditableWarning={true}
-              value={node.tagName.toLowerCase()}
-              onChange={(ev) => onSetTagName(node, ev.target.value)}
-              // onInput={(ev) =>
-              //   renameNodeAndRefresh(node, ev.currentTarget.innerText)
-              // }
+            <Toggle
+              node={node}
+              childNodes={children}
+              onToggle={(collapsed) => onToggle(node, collapsed)}
             />
+            <ElementName node={node} onChange={(v) => onSetTagName(node, v)} />
+            {!nodeAttributes(node).length ? (
+              <AddAttributeButton onClick={() => addNewAttribute(node)} />
+            ) : null}
             <div className="flex-grow flex flex-col">
-              {renderAttributes(node)}
-              {renderStyleDirective(node)}
+              <Attributes
+                node={node}
+                onAdd={() => addNewAttribute(node)}
+                onRename={(oldName, newName) =>
+                  onRenameAttribute(node, oldName, newName)
+                }
+                onChange={(name, value) => onSetAttribute(node, name, value)}
+              />
+              <StyleDirectives node={node} onChange={onSetStyleDirectives} />
             </div>
           </div>
         ) : node.nodeType === Node.TEXT_NODE ? (
@@ -140,5 +97,144 @@ const HTMLNode = ({
     </div>
   );
 };
+
+const ElementName = ({
+  node,
+  onChange,
+}: {
+  node: Element;
+  onChange: (val: string) => void;
+}) => {
+  return (
+    <input
+      className="block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
+      // contentEditable={true}
+      // suppressContentEditableWarning={true}
+      value={node.tagName.toLowerCase()}
+      onChange={(ev) => onChange(ev.target.value)}
+      // onInput={(ev) =>
+      //   renameNodeAndRefresh(node, ev.currentTarget.innerText)
+      // }
+    />
+  );
+};
+
+const Toggle = ({
+  node,
+  childNodes,
+  onToggle,
+}: {
+  node: Element;
+  childNodes: Element[];
+  onToggle: (collapsed: boolean) => void;
+}) => {
+  const isCollapsed = nodeIsCollapsed(node);
+  return childNodes.length ? (
+    <button
+      className={cx(
+        "flex-vh b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
+        { "bg-yellow-700/50": !isCollapsed, "bg-black": isCollapsed }
+      )}
+      onClick={() => onToggle(!isCollapsed)}
+    >
+      {isCollapsed ? childNodes.length : <CaretUp />}
+    </button>
+  ) : null;
+};
+
+const StyleDirectives = ({
+  node,
+  onChange,
+}: {
+  node: Element;
+  onChange: (node: Element, val: string) => void;
+}) => {
+  const noStyles = STYLELESS_NODES.includes(node.tagName.toLowerCase());
+  return !noStyles ? (
+    <TextareaAutosize
+      className="bg-cyan-400/25 min-h-full resize-none rounded-md b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs font-mono"
+      style={{ lineHeight: "14px" }}
+      placeholder="Style directives"
+      minRows={1}
+      value={generateNodeStyleDirective(node)}
+      onChange={(ev) => onChange(node, ev.target.value)}
+    />
+  ) : null;
+};
+
+const Attributes = ({
+  node,
+  onAdd,
+  onRename,
+  onChange,
+}: {
+  node: Element;
+  onAdd: () => void;
+  onRename: (oldName: string, newName: string) => void;
+  onChange: (attr: string, value: string) => void;
+}) => {
+  const attributes = nodeAttributes(node);
+  return attributes.length > 0 ? (
+    <div className="flex flex-wrap ml-0.5">
+      {attributes.map(({ name, value }, i) => (
+        <div
+          className="text-xs text-center whitespace-nowrap font-mono mx-0.25"
+          key={i}
+        >
+          <ContentEditable
+            value={name}
+            onChange={(newName) => onRename(name, newName)}
+            className="bg-red-500/25 px-1 rounded-t-md"
+          />
+          <ContentEditable
+            value={value}
+            onChange={(newValue) => onChange(name, newValue)}
+            className="bg-red-500/10 px-1 rounded-b-md"
+          />
+        </div>
+      ))}
+      <AddAttributeButton onClick={onAdd} />
+    </div>
+  ) : null;
+};
+
+type ContentEditableProps = {
+  value: string;
+  onChange: (val: string) => void;
+  className: string;
+};
+
+const ContentEditable = ({
+  value,
+  onChange,
+  ...props
+}: ContentEditableProps) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.innerText = value;
+    }
+  }, []);
+
+  const handleInput = (event: React.FormEvent<HTMLDivElement>) => {
+    if (elementRef.current) {
+      onChange((event.target as HTMLDivElement).innerText);
+    }
+  };
+
+  return (
+    <div {...props} contentEditable ref={elementRef} onInput={handleInput} />
+  );
+};
+
+const AddAttributeButton = ({ onClick }: { onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className="flex-vh bg-red-500/50 rounded-md w-4 ml-0.5 h-full pb-1 font-bold text-black/60 text-shadow-light-1 b1 border-red-600/20 hover:bg-red-500/60"
+  >
+    +
+  </button>
+);
 
 export default HTMLNode;

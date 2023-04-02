@@ -79,11 +79,24 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     refresh();
   }
 
+  function renameAttribute(node: Element, oldName: string, newName: string) {
+    console.log(
+      `Renaming attribute <${node.tagName}> ${oldName} => ${newName}`
+    );
+    const value = node.getAttribute(oldName);
+    if (value) {
+      node.setAttribute(newName, value);
+    }
+    node.removeAttribute(oldName);
+    refresh();
+  }
+
   function changeAttribute(
     node: Element,
     attrName: string,
     newVal: string | boolean
   ) {
+    console.log(`Changing attribute <${node.tagName}> ${attrName}=${newVal}`);
     if (newVal === false) {
       node.removeAttribute(attrName);
     } else if (newVal === true) {
@@ -122,6 +135,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
         editingNode={editingNode}
         onFocus={(node) => setEditingNode(node)}
         onSetTagName={changeNodeName}
+        onRenameAttribute={renameAttribute}
         onSetAttribute={changeAttribute}
         onSetStyleDirectives={changeStyleDirectives}
         onSetText={changeText}

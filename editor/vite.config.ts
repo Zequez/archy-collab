@@ -19,7 +19,11 @@ export default defineConfig({
               "0 0 6px -1px hsl(0 0% 0% / 0.3), 0 0 3px -1px hsl(0 0% 0% / 0.3)",
           },
         ],
-        ["text-shadow-dark-1", { "text-shadow": "0 1px 0 hsla(0,0%,0%,0.4)" }],
+        ["text-shadow-dark-1", { "text-shadow": "0 1px 0 hsl(0 0% 0% / 0.4)" }],
+        [
+          "text-shadow-light-1",
+          { "text-shadow": "0 1px 0 hsl(0 0% 100% / 0.5)" },
+        ],
       ],
       shortcuts: {
         "flex-vh": "flex items-center justify-center",
