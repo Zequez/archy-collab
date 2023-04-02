@@ -36,12 +36,17 @@ const HTMLNode = ({
 }: HTMLNodeProps) => {
   const children = renderableChildNodes(node, editingNode);
   const isEditing = node === editingNode;
-  const [newAttrName, setNewAttrName] = useState<null | string>(null);
-  const [newAttrValue, setNewAttrValue] = useState<null | string>(null);
+
+  const [editingAttribute, setEditingAttribute] = useState<
+    null | [string, string]
+  >(null);
+  // const [newAttrName, setNewAttrName] = useState<null | string>(null);
+  // const [newAttrValue, setNewAttrValue] = useState<null | string>(null);
 
   const addNewAttribute = (node: Element) => {
-    setNewAttrName("");
-    setNewAttrValue("");
+    // setNewAttrName("");
+    // setNewAttrValue("");
+    setEditingAttribute(["", ""]);
     console.log("NEW ATTRIBUTE!", node);
   };
 
@@ -173,26 +178,53 @@ const Attributes = ({
   onRename: (oldName: string, newName: string) => void;
   onChange: (attr: string, value: string) => void;
 }) => {
+  const [errorStatus, setErrorStatus] = useState<Map<Element, string>>(
+    new Map<Element, string>()
+  );
   const attributes = nodeAttributes(node);
+
+  const safeRename = (node: Element, name: string, newName: string) => {
+    console.log("Renaming safely", node, `${name} => ${newName}`);
+    if (name === newName) {
+      errorStatus.delete(node);
+    } else if (newName && node.getAttribute(newName) === null) {
+      errorStatus.delete(node);
+      onRename(name, newName);
+    } else {
+      console.log("ERROR");
+      errorStatus.set(node, name);
+    }
+    setErrorStatus(new Map(errorStatus));
+  };
+
   return attributes.length > 0 ? (
     <div className="flex flex-wrap ml-0.5">
-      {attributes.map(({ name, value }, i) => (
-        <div
-          className="text-xs text-center whitespace-nowrap font-mono mx-0.25"
-          key={i}
-        >
-          <ContentEditable
-            value={name}
-            onChange={(newName) => onRename(name, newName)}
-            className="bg-red-500/25 px-1 rounded-t-md"
-          />
-          <ContentEditable
-            value={value}
-            onChange={(newValue) => onChange(name, newValue)}
-            className="bg-red-500/10 px-1 rounded-b-md"
-          />
-        </div>
-      ))}
+      {attributes.map(({ name, value }, i) => {
+        const errorAttr = errorStatus.get(node);
+        return (
+          <div
+            className={cx(
+              "text-xs text-center whitespace-nowrap font-mono mx-0.25",
+              {
+                "outline-solid outline-2 outline-red-500/80 rounded-md":
+                  errorAttr === name,
+              }
+            )}
+            key={i}
+          >
+            <ContentEditable
+              value={name}
+              onChange={(newName) => safeRename(node, name, newName)}
+              className="bg-red-500/25 px-1 rounded-t-md"
+            />
+            <ContentEditable
+              value={value}
+              onChange={(newValue) => onChange(name, newValue)}
+              className="bg-red-500/10 px-1 rounded-b-md"
+            />
+          </div>
+        );
+      })}
       <AddAttributeButton onClick={onAdd} />
     </div>
   ) : null;
@@ -201,6 +233,7 @@ const Attributes = ({
 type ContentEditableProps = {
   value: string;
   onChange: (val: string) => void;
+  onFocus?: () => void;
   className: string;
 };
 
