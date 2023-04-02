@@ -19,13 +19,13 @@ const CommitButton: React.FC<CommitButtonProps> = ({
   children,
 }) => (
   <button
+    className="text-shadow-dark-1"
     style={{
       backgroundColor: enabled
         ? hsla(hue, sat || 39, 45, 1)
         : hsla(hue, sat || 0, 45, 1),
       border: "none",
       color: "hsla(0,0%,100%,0.85)",
-      textShadow: "0 1px 0 hsla(0,0%,0%,0.5)",
       padding: "0.25rem 0.25rem",
       textAlign: "center",
       textDecoration: "none",

@@ -21,7 +21,7 @@ const ActionBar = ({
   left,
 }: ActionBarProps) => {
   return (
-    <div className="bg-gray-100 border-t-gray-300 flex">
+    <div className="absolute left-0 h-8 bottom-2 right-2 bg-white/25 rounded-md shadow-md overflow-hidden flex flex-shrink-0">
       <div className="flex justify-start flex-grow items-stretch">{left}</div>
       <div className="flex justify-end items-stretch">
         <StyledButton

@@ -97,40 +97,47 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   const [editorMode, setEditorMode] = useState<EditorMode>("RAW_CODE");
 
   return (
-    <div className="flex fixed inset-0 bg-white z-[9999]">
+    <div className="flex fixed inset-0 bg-yellow-50 z-[9999]">
       {loading ? (
         "Loading..."
       ) : (
         <>
-          {isResizing ? <div className="fixed inset-0"></div> : null}
-          <iframe
-            sandbox="allow-scripts allow-popups allow-same-origin"
-            allow="microphone"
-            className="h-full border-none flex-shrink-0"
-            style={{ width: `${iframeWidth}%` }}
-            src={previewBlobUrl}
-          ></iframe>
           <div
-            className="flex bg-gray-100 items-center justify-center w-3 cursor-ew-resize flex-shrink-0"
-            style={{
-              boxShadow:
-                "inset 1px 0 0  hsl(0,0%,80%), inset -1px 0 0  hsl(0,0%,80%)",
-            }}
+            className="p-2 w-full h-full flex-shrink-0"
+            style={{ width: `${iframeWidth}%` }}
+          >
+            <iframe
+              sandbox="allow-scripts allow-popups allow-same-origin"
+              allow="microphone"
+              className={cx("h-full w-full border-none  rounded-md shadow-md", {
+                "pointer-events-none": isResizing,
+              })}
+              src={previewBlobUrl}
+            ></iframe>
+          </div>
+          <div
+            className="flex items-center justify-center -ml-2 w-2 py-2 cursor-col-resize flex-shrink-0 group"
             onMouseDown={handleResizerStart}
           >
-            <div className="w-2 text-gray-400">
-              <GripLinesVertical />
-            </div>
+            <div
+              className={cx(
+                "w-[4px] group-hover:opacity-100 h-full transition-opacity rounded-md bg-black/30",
+                { "opacity-100": isResizing },
+                { "opacity-0": !isResizing }
+              )}
+            ></div>
           </div>
-          <div className="h-full overflow-auto text-black flex flex-col flex-grow">
-            <div style={{ overflow: "auto", flexGrow: 1 }}>
+          <div className="h-full text-black flex flex-col flex-grow relative pb-14 pt-2 overflow-hidden">
+            <div className="flex-grow flex w-full h-full">
               {editorMode === "RAW_CODE" ? (
-                <CodeMirror
-                  extensions={[htmlLang()]}
-                  className="block w-full h-full border-box border-none outline-none"
-                  value={editorHtmlDocument}
-                  onChange={(val) => handleEditorHtmlUpdate(val)}
-                />
+                <div className="flex-grow rounded-md shadow-md w-full h-full overflow-auto mr-2">
+                  <CodeMirror
+                    extensions={[htmlLang()]}
+                    className="h-full w-full block border-box border-none outline-none"
+                    value={editorHtmlDocument}
+                    onChange={(val) => handleEditorHtmlUpdate(val)}
+                  />
+                </div>
               ) : (
                 <HTMLTreeEditor
                   value={editorHtmlDocument}
@@ -185,13 +192,12 @@ const EditorModeButton = ({
   return (
     <button
       className={cx(
-        "h-full bg-gradient-to-b from-green-300 to-green-400/80 text-white/80 px-2 mr-[1px] font-bold filter saturate-50",
+        "h-full bg-gradient-to-b from-green-500 to-green-600/80 border-0 text-white/80 px-2 mr-[1px] font-bold filter saturate-50 text-shadow-dark-1",
         {
           "shadow-inner border-b-4 border-solid border-green-600 saturate-100":
             currentMode === mode,
         }
       )}
-      style={{ textShadow: "0 1px 0 hsla(0,0%,0%,0.2)" }}
       onClick={() => onClick(mode)}
     >
       {text}

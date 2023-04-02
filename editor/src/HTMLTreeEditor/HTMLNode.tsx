@@ -42,7 +42,7 @@ const HTMLNode = ({
     return children.length ? (
       <button
         className={cx(
-          "*flex-vh *b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
+          "flex-vh b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
           { "bg-yellow-700/50": !isCollapsed, "bg-black": isCollapsed }
         )}
         onClick={() => onSetAttribute(node, "data-collapsed", !isCollapsed)}
@@ -56,7 +56,7 @@ const HTMLNode = ({
     const noClass = STYLELESS_NODES.includes(node.tagName.toLowerCase());
     return !noClass ? (
       <TextareaAutosize
-        className="bg-cyan-400/25 min-h-full resize-none rounded-md *b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs font-mono"
+        className="bg-cyan-400/25 min-h-full resize-none rounded-md b1 border-black/10 ml-0.5 px-2 py-2 m-0 flex-grow first:mt-0 mt-0.5 text-xs font-mono"
         style={{ lineHeight: "14px" }}
         placeholder="Style directives"
         minRows={1}
@@ -99,7 +99,7 @@ const HTMLNode = ({
 
   return (
     <div
-      className="relative border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10"
+      className="relative border-0 border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10"
       style={{ paddingLeft: `${depth}rem` }}
     >
       {isEditing ? (
@@ -111,7 +111,7 @@ const HTMLNode = ({
         onFocus={() => onFocus(node)}
       >
         {node.nodeType === Node.ELEMENT_NODE ? (
-          <div className="*flex-v flex-grow my-0.25">
+          <div className="flex-v flex-grow my-0.25">
             {renderToggle(node, children)}
             <input
               className="block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
