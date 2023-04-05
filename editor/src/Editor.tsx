@@ -10,7 +10,6 @@ import { useDocumentFromServer } from "./lib/api";
 import { useAgent } from "./lib/agent";
 import useDocumentWithBlob from "./lib/useDocumentWithBlob";
 import { useCtrlS } from "./lib/globalKeyBindings";
-import { GripLinesVertical } from "./lib/icons";
 
 type EditorProps = {
   onClose: () => void;

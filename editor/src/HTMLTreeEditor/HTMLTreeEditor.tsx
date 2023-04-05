@@ -18,8 +18,8 @@ type HTMLTreeEditorProps = {
 };
 
 let _key = 0;
-const addKeyToNode = (node: Element) => {
-  (node as any)._key = _key++;
+const addKeyToNode = (node: Element, keyVal?: number) => {
+  (node as any)._key = keyVal || _key++;
 };
 
 function generateDocument(html: string) {
@@ -68,7 +68,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
 
   function changeNodeName(node: Element, newNodeName: string) {
     const newNode = renameNode(node, newNodeName);
-    addKeyToNode(newNode);
+    addKeyToNode(newNode, (node as any)._key);
     if (editingNode === node) {
       setEditingNode(newNode);
     }
