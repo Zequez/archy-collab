@@ -38,7 +38,7 @@ const Attributes = ({
         // We don't modify these attributes through this component
       } else if (disallowedNames.includes(name)) {
         newErrors.add(i);
-      } else if (!/^[a-z\-]+$/i.test(name)) {
+      } else if (!/^[a-z\-]+$/.test(name)) {
         newErrors.add(i);
       }
     });

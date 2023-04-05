@@ -127,6 +127,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
         node.removeAttribute(name);
       }
     }
+    refresh();
   }
 
   function changeStyleDirectives(node: Element, styleDirective: string) {
