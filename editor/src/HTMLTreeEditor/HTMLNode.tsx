@@ -101,12 +101,20 @@ const ElementName = ({
   node: Element;
   onChange: (val: string) => void;
 }) => {
+  const tagName = node.tagName.toLowerCase();
+  const isStyleless = STYLELESS_NODES.includes(tagName);
   return (
     <input
-      className="block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 bg-white/50 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm"
+      className={cx(
+        "block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm",
+        {
+          "bg-white/50": !isStyleless,
+          "bg-purple-800/75 text-white": isStyleless,
+        }
+      )}
       // contentEditable={true}
       // suppressContentEditableWarning={true}
-      value={node.tagName.toLowerCase()}
+      value={tagName}
       onChange={(ev) => onChange(ev.target.value)}
       // onInput={(ev) =>
       //   renameNodeAndRefresh(node, ev.currentTarget.innerText)
