@@ -47,14 +47,14 @@ const HTMLNode = ({
 
   return (
     <div
-      className="relative border-0 border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10"
+      className="relative border-0 border-l border-l-yellow-400/10 border-solid hover:bg-yellow-400/10 group"
       style={{ paddingLeft: `${depth + 1}rem` }}
     >
       {isEditing ? (
         <div className="rounded-md bg-yellow-400/10 absolute inset-0 pointer-events-none"></div>
       ) : null}
       <div
-        className="flex group"
+        className="flex"
         // tabIndex={0}
         onFocus={() => onFocus(node)}
       >
@@ -129,7 +129,10 @@ const Toggle = ({
     <button
       className={cx(
         "flex-vh b1 w-4 h-4 px-0.5 -ml-4 border-yellow/10 rounded-sm mr-0.25 text-white cursor-pointer",
-        { "bg-yellow-700/50": !isCollapsed, "bg-black": isCollapsed }
+        {
+          "bg-yellow-700/50 invisible group-hover:visible": !isCollapsed,
+          "bg-black": isCollapsed,
+        }
       )}
       onClick={() => onToggle(!isCollapsed)}
     >
