@@ -5,6 +5,7 @@ import {
   isBlank,
   extractContentInCurlyBraces,
   nodeIsCollapsed,
+  nodeAttributes,
 } from "./helpers";
 import { serializeHtml } from "./htmlSerializer";
 import HTMLNode from "./HTMLNode";
@@ -107,6 +108,27 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
     refresh();
   }
 
+  function setAllAttributes(node: Element, newAttributes: Map<string, string>) {
+    // const representation = Array.from(newAttributes.entries())
+    //   .map(([k, v]) => `${k}=${v}`)
+    //   .join(" ");
+    // console.log(`Setting all attributes <${node.tagName}> ${representation}`);
+    const currentAttributes = nodeAttributes(node);
+    const currentMap = new Map<string, string>();
+    currentAttributes.map(({ name, value }) => currentMap.set(name, value));
+    newAttributes.forEach((value, name) => {
+      node.setAttribute(name, value);
+      if (currentMap.has(name)) {
+        currentMap.delete(name);
+      }
+    });
+    if (currentMap.size > 0) {
+      for (let name of currentMap.keys()) {
+        node.removeAttribute(name);
+      }
+    }
+  }
+
   function changeStyleDirectives(node: Element, styleDirective: string) {
     const [classes, styles] = extractContentInCurlyBraces(styleDirective);
     if (classes) {
@@ -136,6 +158,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
         onFocus={(node) => setEditingNode(node)}
         onSetTagName={changeNodeName}
         onRenameAttribute={renameAttribute}
+        onSetAttributes={setAllAttributes}
         onSetAttribute={changeAttribute}
         onSetStyleDirectives={changeStyleDirectives}
         onSetText={changeText}

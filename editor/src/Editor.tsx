@@ -109,9 +109,12 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
             <iframe
               sandbox="allow-scripts allow-popups allow-same-origin"
               allow="microphone"
-              className={cx("h-full w-full border-none  rounded-md shadow-md", {
-                "pointer-events-none": isResizing,
-              })}
+              className={cx(
+                "h-full w-full border-none  rounded-md shadow-md bg-white",
+                {
+                  "pointer-events-none": isResizing,
+                }
+              )}
               src={previewBlobUrl}
             ></iframe>
           </div>

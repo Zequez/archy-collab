@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import cx from "classnames";
 import TextareaAutosize from "react-textarea-autosize";
 import { CaretUp } from "../lib/icons";
@@ -7,7 +7,9 @@ import {
   nodeIsCollapsed,
   generateNodeStyleDirective,
   nodeAttributes,
+  ATTRIBUTES_NOT_TO_RENDER,
 } from "./helpers";
+import Attributes from "./Attributes";
 
 const STYLELESS_NODES = ["meta", "title", "script", "link", "head"];
 
@@ -16,6 +18,7 @@ type HTMLNodeProps = {
   editingNode: Element | null;
   onFocus: (node: Element) => void;
   onRenameAttribute: (node: Element, name: string, newName: string) => void;
+  onSetAttributes: (node: Element, attributes: Map<string, string>) => void;
   onSetAttribute: (node: Element, attr: string, val: string | boolean) => void;
   onSetTagName: (node: Element, newName: string) => void;
   onSetStyleDirectives: (node: Element, styleDirective: string) => void;
@@ -27,6 +30,7 @@ const HTMLNode = ({
   node,
   editingNode,
   onFocus,
+  onSetAttributes,
   onRenameAttribute,
   onSetAttribute,
   onSetTagName,
@@ -36,19 +40,6 @@ const HTMLNode = ({
 }: HTMLNodeProps) => {
   const children = renderableChildNodes(node, editingNode);
   const isEditing = node === editingNode;
-
-  const [editingAttribute, setEditingAttribute] = useState<
-    null | [string, string]
-  >(null);
-  // const [newAttrName, setNewAttrName] = useState<null | string>(null);
-  // const [newAttrValue, setNewAttrValue] = useState<null | string>(null);
-
-  const addNewAttribute = (node: Element) => {
-    // setNewAttrName("");
-    // setNewAttrValue("");
-    setEditingAttribute(["", ""]);
-    console.log("NEW ATTRIBUTE!", node);
-  };
 
   const onToggle = (node: Element, collapsed: boolean) => {
     onSetAttribute(node, "data-collapsed", collapsed);
@@ -82,11 +73,10 @@ const HTMLNode = ({
             >
               <Attributes
                 node={node}
-                onAdd={() => addNewAttribute(node)}
-                onRename={(oldName, newName) =>
-                  onRenameAttribute(node, oldName, newName)
+                onChangeAttributes={(newAttributesList) =>
+                  onSetAttributes(node, newAttributesList)
                 }
-                onChange={(name, value) => onSetAttribute(node, name, value)}
+                disallowedNames={ATTRIBUTES_NOT_TO_RENDER}
               />
               <StyleDirectives node={node} onChange={onSetStyleDirectives} />
             </div>
@@ -167,114 +157,5 @@ const StyleDirectives = ({
     />
   ) : null;
 };
-
-const Attributes = ({
-  node,
-  onAdd,
-  onRename,
-  onChange,
-}: {
-  node: Element;
-  onAdd: () => void;
-  onRename: (oldName: string, newName: string) => void;
-  onChange: (attr: string, value: string) => void;
-}) => {
-  const [errorStatus, setErrorStatus] = useState<Map<Element, string>>(
-    new Map<Element, string>()
-  );
-  const attributes = nodeAttributes(node);
-
-  const safeRename = (node: Element, name: string, newName: string) => {
-    console.log("Renaming safely", node, `${name} => ${newName}`);
-    if (name === newName) {
-      errorStatus.delete(node);
-    } else if (newName && node.getAttribute(newName) === null) {
-      errorStatus.delete(node);
-      onRename(name, newName);
-    } else {
-      console.log("ERROR");
-      errorStatus.set(node, name);
-    }
-    setErrorStatus(new Map(errorStatus));
-  };
-
-  let lastAttrIndex = 0;
-  return (
-    <div
-      className={cx("flex flex-wrap ml-0.5", {
-        "contents!": !attributes.length,
-      })}
-    >
-      {attributes.map(({ name, value }, i) => {
-        const errorAttr = errorStatus.get(node);
-        lastAttrIndex = i;
-        return (
-          <div
-            className={cx(
-              "text-xs text-center whitespace-nowrap font-mono mx-0.25",
-              {
-                "outline-solid outline-2 outline-red-500/80 rounded-md":
-                  errorAttr === name,
-              }
-            )}
-            key={i}
-          >
-            <ContentEditable
-              value={name}
-              onChange={(newName) => safeRename(node, name, newName)}
-              className="bg-red-500/25 px-1 rounded-t-md"
-            />
-            <ContentEditable
-              value={value}
-              onChange={(newValue) => onChange(name, newValue)}
-              className="bg-red-500/10 px-1 rounded-b-md"
-            />
-          </div>
-        );
-      })}
-      <AddAttributeButton onClick={onAdd} />
-    </div>
-  );
-};
-
-type ContentEditableProps = {
-  value: string;
-  onChange: (val: string) => void;
-  onFocus?: () => void;
-  className: string;
-};
-
-const ContentEditable = ({
-  value,
-  onChange,
-  ...props
-}: ContentEditableProps) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (elementRef.current) {
-      elementRef.current.innerText = value;
-    }
-  }, []);
-
-  const handleInput = (event: React.FormEvent<HTMLDivElement>) => {
-    if (elementRef.current) {
-      onChange((event.target as HTMLDivElement).innerText);
-    }
-  };
-
-  return (
-    <div {...props} contentEditable ref={elementRef} onInput={handleInput} />
-  );
-};
-
-const AddAttributeButton = ({ onClick }: { onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className="flex-vh bg-red-500/50 rounded-md w-4 ml-0.5 h-full pb-1 font-bold text-black/60 text-shadow-light-1 b1 border-red-600/20 hover:bg-red-500/60"
-  >
-    +
-  </button>
-);
 
 export default HTMLNode;
