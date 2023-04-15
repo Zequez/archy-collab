@@ -148,10 +148,10 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
                   )}
                 ></div>
               </div>
-              <div className="h-200 text-black flex flex-col flex-grow relative pb-12 overflow-hidden">
-                <div className="flex-grow flex w-full h-full pt-2">
+              <div className="h-full text-black flex-grow relative">
+                <div className="top-[0.5rem] w-[calc(100%-0.5rem)] h-[calc(100%-3.5rem)] overflow-auto absolute">
                   {editorMode === "RAW_CODE" ? (
-                    <div className="flex-grow rounded-md shadow-md w-full h-full overflow-auto mr-2">
+                    <div className="rounded-md shadow-md w-full">
                       <CodeMirror
                         extensions={[htmlLang()]}
                         className="h-full w-full block border-box border-none outline-none"

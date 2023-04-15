@@ -174,9 +174,7 @@ const HTMLTreeEditor = ({ value, onChange }: HTMLTreeEditorProps) => {
 
   const nodes = collectNodesWithDepth(rootNode);
 
-  return (
-    <div className="bg-yellow-50 pr-1 w-full h-full overflow-auto">{nodes}</div>
-  );
+  return <div className="w-full">{nodes}</div>;
 };
 
 export default HTMLTreeEditor;
