@@ -18,7 +18,7 @@ type EditorProps = {
 };
 
 const Editor = ({ onClose, documentPath }: EditorProps) => {
-  const [agent] = useAgent(() => onClose());
+  const [agent, setAgent] = useAgent(() => onClose());
   const [serverDocument, serverCommit, commitLoading] = useDocumentFromServer(
     agent,
     documentPath
@@ -57,6 +57,10 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
 
   function setLocalStorageHtml(newHtml: string) {
     window.localStorage.setItem(documentPath, newHtml);
+  }
+
+  function handleChangeAgent(newAgentSecret: string) {
+    setAgent(newAgentSecret);
   }
 
   // Resizing logic
@@ -108,12 +112,24 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
             value={documentPath}
           />
           <div className="h-10 w-10 p-2.5">{<icons.Key />}</div>
-          <input
-            type="text"
-            placeholder="Key"
-            className="px-2 w-120 py-1 border border-gray-200 rounded-md"
-            value={agent?.buildSecret()}
-          />
+          {agent && agent.publicKey ? (
+            <>
+              <input
+                type="text"
+                placeholder="Key"
+                className="px-2 w-80 py-1 border border-gray-200 rounded-md"
+                value={agent.buildSecret()}
+                onChange={(ev) => handleChangeAgent(ev.target.value)}
+              />
+              <a
+                className="text-blue-500 underline py-2 px-2"
+                target="_blank"
+                href={`https://atomicdata.dev/agents/${agent.publicKey}`}
+              >
+                Profile &rarr;
+              </a>
+            </>
+          ) : null}
         </div>
         <div className="flex flex-grow relative">
           {loading ? (

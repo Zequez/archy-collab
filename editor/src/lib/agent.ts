@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { ANONYMOUS_PUBLIC_KEY, Agent, store } from "./api";
 
-export const useAgent = (onCancel: () => void): [Agent | null] => {
+export const useAgent = (
+  onCancel: () => void
+): [Agent | null, (agentSecret: string) => void] => {
   const [agent, setAgent] = useState<Agent | null>(null);
 
   useEffect(() => {
@@ -12,14 +14,18 @@ export const useAgent = (onCancel: () => void): [Agent | null] => {
       ) ||
       ANONYMOUS_PUBLIC_KEY;
     if (agentSecret) {
-      const newAgent = Agent.fromSecret(agentSecret);
-      localStorage.setItem("agentSecret", agentSecret);
-      store.setAgent(newAgent);
-      setAgent(newAgent);
+      setAgentFromSecret(agentSecret);
     } else {
       onCancel();
     }
   }, []);
 
-  return [agent];
+  function setAgentFromSecret(secret: string) {
+    const newAgent = Agent.fromSecret(secret);
+    localStorage.setItem("agentSecret", secret);
+    store.setAgent(newAgent);
+    setAgent(newAgent);
+  }
+
+  return [agent, setAgentFromSecret];
 };
