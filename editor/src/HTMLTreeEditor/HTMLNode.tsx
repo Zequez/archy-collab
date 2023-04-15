@@ -103,13 +103,15 @@ const ElementName = ({
 }) => {
   const tagName = node.tagName.toLowerCase();
   const isStyleless = STYLELESS_NODES.includes(tagName);
+  const isCustomElement = tagName.match(/\-/);
   return (
     <input
       className={cx(
         "block h-full w-20 flex-shrink flex items-center font-mono font-bold px-2 py-1 border border-solid border-black/10 rounded-md focus:outline outline-solid-green-500 shadow-sm",
         {
-          "bg-white/50": !isStyleless,
-          "bg-purple-800/75 text-white": isStyleless,
+          "bg-white/50": !isStyleless && !isCustomElement,
+          "bg-purple-800/75 text-white": isStyleless && !isCustomElement,
+          "bg-blue-800/75 text-white": isCustomElement,
         }
       )}
       // contentEditable={true}

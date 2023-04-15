@@ -10,6 +10,7 @@ import { useDocumentFromServer } from "./lib/api";
 import { useAgent } from "./lib/agent";
 import useDocumentWithBlob from "./lib/useDocumentWithBlob";
 import { useCtrlS } from "./lib/globalKeyBindings";
+import * as icons from "./lib/icons";
 
 type EditorProps = {
   onClose: () => void;
@@ -96,84 +97,104 @@ const Editor = ({ onClose, documentPath }: EditorProps) => {
   const [editorMode, setEditorMode] = useState<EditorMode>("RAW_CODE");
 
   return (
-    <div className="flex fixed inset-0 bg-yellow-50 z-[9999]">
-      {loading ? (
-        "Loading..."
-      ) : (
-        <>
-          <div
-            className="p-2 w-full h-full flex-shrink-0"
-            style={{ width: `${iframeWidth}%` }}
-          >
-            <iframe
-              sandbox="allow-scripts allow-popups allow-same-origin"
-              allow="microphone"
-              className={cx(
-                "h-full w-full border-none  rounded-md shadow-md bg-white",
-                {
-                  "pointer-events-none": isResizing,
-                }
-              )}
-              src={previewBlobUrl}
-            ></iframe>
-          </div>
-          <div
-            className="flex items-center justify-center -ml-2 w-2 py-2 cursor-col-resize flex-shrink-0 group"
-            onMouseDown={handleResizerStart}
-          >
-            <div
-              className={cx(
-                "w-[4px] group-hover:opacity-100 h-full transition-opacity rounded-md bg-black/30",
-                { "opacity-100": isResizing },
-                { "opacity-0": !isResizing }
-              )}
-            ></div>
-          </div>
-          <div className="h-full text-black flex flex-col flex-grow relative pb-12 overflow-hidden">
-            <div className="flex-grow flex w-full h-full pt-2">
-              {editorMode === "RAW_CODE" ? (
-                <div className="flex-grow rounded-md shadow-md w-full h-full overflow-auto mr-2">
-                  <CodeMirror
-                    extensions={[htmlLang()]}
-                    className="h-full w-full block border-box border-none outline-none"
-                    value={editorHtmlDocument}
-                    onChange={(val) => handleEditorHtmlUpdate(val)}
-                  />
+    <div>
+      <div className="flex flex-col fixed inset-0 bg-yellow-50 z-[9999]">
+        <div className="p-2 pb-0 flex">
+          <div className="h-10 w-10 p-2.5">{<icons.Globe />}</div>
+          <input
+            type="text"
+            placeholder="Location"
+            className="px-2 py-1 border border-gray-200 rounded-md mr-2"
+            value={documentPath}
+          />
+          <div className="h-10 w-10 p-2.5">{<icons.Key />}</div>
+          <input
+            type="text"
+            placeholder="Key"
+            className="px-2 w-120 py-1 border border-gray-200 rounded-md"
+            value={agent?.buildSecret()}
+          />
+        </div>
+        <div className="flex flex-grow relative">
+          {loading ? (
+            "Loading..."
+          ) : (
+            <>
+              <div
+                className="p-2 w-full h-full flex-shrink-0"
+                style={{ width: `${iframeWidth}%` }}
+              >
+                <iframe
+                  sandbox="allow-scripts allow-popups allow-same-origin"
+                  allow="microphone"
+                  className={cx(
+                    "h-full w-full border-none  rounded-md shadow-md bg-white",
+                    {
+                      "pointer-events-none": isResizing,
+                    }
+                  )}
+                  src={previewBlobUrl}
+                ></iframe>
+              </div>
+              <div
+                className="flex items-center justify-center -ml-2 w-2 py-2 cursor-col-resize flex-shrink-0 group"
+                onMouseDown={handleResizerStart}
+              >
+                <div
+                  className={cx(
+                    "w-[4px] group-hover:opacity-100 h-full transition-opacity rounded-md bg-black/30",
+                    { "opacity-100": isResizing },
+                    { "opacity-0": !isResizing }
+                  )}
+                ></div>
+              </div>
+              <div className="h-200 text-black flex flex-col flex-grow relative pb-12 overflow-hidden">
+                <div className="flex-grow flex w-full h-full pt-2">
+                  {editorMode === "RAW_CODE" ? (
+                    <div className="flex-grow rounded-md shadow-md w-full h-full overflow-auto mr-2">
+                      <CodeMirror
+                        extensions={[htmlLang()]}
+                        className="h-full w-full block border-box border-none outline-none"
+                        value={editorHtmlDocument}
+                        onChange={(val) => handleEditorHtmlUpdate(val)}
+                      />
+                    </div>
+                  ) : (
+                    <HTMLTreeEditor
+                      value={editorHtmlDocument}
+                      onChange={handleEditorHtmlUpdate}
+                    />
+                  )}
                 </div>
-              ) : (
-                <HTMLTreeEditor
-                  value={editorHtmlDocument}
-                  onChange={handleEditorHtmlUpdate}
+                <ActionBar
+                  onSave={handleSave}
+                  onCommit={handleCommit}
+                  onClose={onClose}
+                  localIsPreviewed={editorHtmlDocument !== previewHtmlDocument}
+                  localIsDirty={editorHtmlDocument !== serverHtmlDocument}
+                  isCommitting={commitLoading}
+                  left={
+                    <>
+                      <EditorModeButton
+                        text="CODE"
+                        mode="RAW_CODE"
+                        currentMode={editorMode}
+                        onClick={setEditorMode}
+                      />
+                      <EditorModeButton
+                        text="BLOCKS"
+                        mode="HTML_TREE"
+                        currentMode={editorMode}
+                        onClick={setEditorMode}
+                      />
+                    </>
+                  }
                 />
-              )}
-            </div>
-            <ActionBar
-              onSave={handleSave}
-              onCommit={handleCommit}
-              onClose={onClose}
-              localIsPreviewed={editorHtmlDocument !== previewHtmlDocument}
-              localIsDirty={editorHtmlDocument !== serverHtmlDocument}
-              isCommitting={commitLoading}
-              left={
-                <>
-                  <EditorModeButton
-                    text="CODE"
-                    mode="RAW_CODE"
-                    currentMode={editorMode}
-                    onClick={setEditorMode}
-                  />
-                  <EditorModeButton
-                    text="BLOCKS"
-                    mode="HTML_TREE"
-                    currentMode={editorMode}
-                    onClick={setEditorMode}
-                  />
-                </>
-              }
-            />
-          </div>
-        </>
-      )}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
